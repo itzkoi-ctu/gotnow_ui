@@ -18,7 +18,7 @@ const Product = () => {
       const{itemsPerPage, currentPage}= useSelector((state) => state.pagination)
 
 
-      const isLoading = useSelector((state) => state.product.isLoading)
+       const isLoading = useSelector((state) => state.product.isLoading)
 
       const {name} =useParams();
       const location= useLocation();
@@ -63,6 +63,14 @@ useEffect(() => {
     indexOfFirstProduct,
     indexOfLastProduct
   );
+
+  if(isLoading){
+    return(
+    <div className="d-flex justify-content-center">
+      <LoadSpinner/>
+    </div>
+    )
+  }
   return (
 
 

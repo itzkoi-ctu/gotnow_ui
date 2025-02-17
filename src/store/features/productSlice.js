@@ -24,13 +24,25 @@ export const getProductsDistinct= createAsyncThunk(
         return response.data.data;
     }
 )
+
+export const getProductById= createAsyncThunk(
+    "product/getProductById",
+    async (productId) => {
+        const response = await api.get(`products/product/${productId}/product`);
+        console.log("response from slice:",response.data.data)
+        return response.data.data;
+    }
+)
+
 const initialState = {
     
     products: [],
+    product: null,
     brands:  [],
     distinctProducts: [],
     selectedBrands: [],
     errorMessage: null,
+    isLoading: false
 }   
 const productSlice = createSlice({
     name: "product",
@@ -74,6 +86,20 @@ const productSlice = createSlice({
                 state.errorMessage = null;
                 state.isLoading = false;
             })
+            .addCase(getProductsDistinct.rejected, (state, action) => {
+                state.distinctProducts = [];
+                state.errorMessage = action.error.message;
+                state.isLoading = false;
+            })
+            .addCase(getProductsDistinct.pending, (state, action) => {
+                state.errorMessage = null;
+                state.isLoading = true;
+            })
+
+            .addCase(getProductById.fulfilled,(state, action) => {
+                state.product= action.payload;
+                state.isLoading=false;       
+        })
 
 
         }
