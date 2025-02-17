@@ -1,7 +1,8 @@
-import React, { use, useEffect } from 'react'
+import React, {  useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCategories } from '../../store/features/categorySlice';
-export const SearchBar = ({onChange, onCategoryChange, onClear}) => {
+import { setSelectedCategory, setSearchQuery, clearFilters } from '../../store/features/searchSlice';
+export const SearchBar = () => {
   const dispatch = useDispatch();
   const categories = useSelector((state) => state.category.category)
   const {searchQuery, selectedCategory} = useSelector((state) => state.search)
@@ -9,7 +10,15 @@ export const SearchBar = ({onChange, onCategoryChange, onClear}) => {
 
 
   const handleCategoryChange = (e) => {
-    onCategoryChange(e.target.value)
+    dispatch(setSelectedCategory(e.target.value))
+  }
+
+  const handleClearFilter = () => {
+    dispatch(clearFilters())
+  }
+
+  const handleSearchQueryChange = (e) => {
+    dispatch(setSearchQuery(e.target.value))
   }
   useEffect(() => {
     dispatch(getAllCategories())
@@ -35,9 +44,9 @@ export const SearchBar = ({onChange, onCategoryChange, onClear}) => {
         className='form-control' 
         placeholder='search for product(e.g. watch..)'
         value={searchQuery}
-        onChange={onChange}
+        onChange={handleSearchQueryChange}
         />
-        <button onClick={onClear} className='search-button'>Clear Filter</button>
+        <button onClick={handleClearFilter} className='search-button'>Clear Filter</button>
 
     </div>
   )

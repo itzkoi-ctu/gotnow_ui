@@ -1,7 +1,8 @@
 import React from "react";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
-
+import {useSelector} from 'react-redux'
  const Footer = () => {
+  const categories= useSelector((state) => state.category.category)
   return (
     <footer className='mega-footer'>
       <div className='footer-container'>
@@ -13,9 +14,9 @@ import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
         <div className='footer-section'>
           <h3>Category</h3>
           <ul>
-            <li>One</li>
-            <li>Two</li>
-            <li>Three</li>
+            {categories.map((category)=> (
+              <li key={category.id} value={category.name}>{category.name}</li>
+            ))}
           </ul>
         </div>
 
@@ -29,7 +30,7 @@ import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
           <h3>Follow Us</h3>
           <div className='social-icons'>
             <a
-              href='https://facebook.com'
+              href='https://www.facebook.com/k0i123'
               target='_blank'
               rel='noopener noreferrer'>
               <FaFacebookF />

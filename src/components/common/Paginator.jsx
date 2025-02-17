@@ -1,6 +1,18 @@
 import React from 'react'
 import {Pagination} from 'react-bootstrap'
-const Paginator = ({itemsPerPage, totalItems, currentPage, paginate}) => {
+import {setCurrentPage} from '../../store/features/paginationSlice'
+import {useDispatch, useSelector} from 'react-redux'
+
+const Paginator = () => {
+
+  const dispatch = useDispatch()
+  const{itemsPerPage, totalItems, currentPage}= useSelector((state) => state.pagination)
+
+  const paginate = (pageNumber) => {
+    dispatch(setCurrentPage(pageNumber))
+  };
+
+
     let active= currentPage;
     let items= []
 
@@ -18,10 +30,11 @@ const Paginator = ({itemsPerPage, totalItems, currentPage, paginate}) => {
             {number}
           </Pagination.Item>
         );
+      }
         return (
             <div className='d-flex justify-content-center me-5'>
               <Pagination>{items}</Pagination>
             </div>
           );
-}}
+}
  export default Paginator;

@@ -5,50 +5,52 @@ import Paginator from "../common/Paginator"
 import { Card } from 'react-bootstrap'
 import ProductImage from '../utils/ProductImage'
 import {toast, ToastContainer} from 'react-toastify'
-import { getDistinctProductByName } from '../services/ProductService'
+import {getProductsDistinct} from '../../store/features/productSlice'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setTotalItems } from '../../store/features/paginationSlice'
 export const Home = () => {
-  const [products, setProducts] = useState([])
+    const dispatch = useDispatch();
+
+
   const [filteredProducts, setFilteredProducts] = useState([])  
 
   const {searchQuery, selectedCategory} = useSelector((state)=> state.search)
+  const{itemsPerPage, currentPage}= useSelector((state) => state.pagination)
+  const productsDistinct = useSelector((state) => state.product.distinctProducts)
 
   const [error, setError] = useState(null)
-  const [currentPage, setCurrentPage]= useState(1)
-  const itemsPerPage= 5
+ 
+  useEffect(() => { 
+    dispatch(getProductsDistinct())
+  }, [dispatch]);// Only fetch date when product state change
 
-  useEffect(() => {
-    const getProducts = async () => {
-      try{
-        const response = await getDistinctProductByName()
-        setProducts(response)
-      }catch(error){
-        setError(error.message)
-        toast.error("Error fetching products: "+ error)
-
-      }
-    } 
-    getProducts()
-  },[])
+ 
 
 
   useEffect(() => {
-    const results = products.filter((product) =>{
+    const results = productsDistinct.filter((product) =>{
     const matchesQuery = product.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || 
     product.category.name.toLowerCase().includes(selectedCategory.toLowerCase())
     return matchesQuery && matchesCategory;
     })
     setFilteredProducts(results)
-  },[searchQuery,selectedCategory, products])
+  },[searchQuery,selectedCategory, productsDistinct])
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  useEffect(()=>{
+      dispatch(setTotalItems(filteredProducts.length))
+    },[filteredProducts, dispatch])
+
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
   const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
+
+
+  
   return (
 
     <>
@@ -61,7 +63,7 @@ export const Home = () => {
         console.log(`Rendering product #${index + 1}:`, product);
         return(
         <Card key={product.id} className='home-product-card'>
-        <Link to={"#"} className= 'link'>
+        <Link to={`products/${product.name}`} className= 'link'>
             <div className='image-container'>
               {product.images.length > 0 && (
                 <ProductImage productId={product.images[0].id} />
@@ -87,12 +89,7 @@ export const Home = () => {
     
     
     </div>
-    <Paginator
-      itemsPerPage={itemsPerPage}
-      totalItems={filteredProducts.length}
-      currentPage={currentPage}
-      paginate={paginate}
-    />
+    <Paginator/>
     </>
   )
 }
