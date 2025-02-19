@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import { SearchBar } from '../search/SearchBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllProducts } from '../../store/features/productSlice';
+import { getAllProducts, getProductsByCategoryId } from '../../store/features/productSlice';
 import Paginator from '../common/Paginator';
 import { setTotalItems } from '../../store/features/paginationSlice';
 import SideBar from '../common/SideBar';
@@ -16,25 +16,37 @@ const Product = () => {
       const {searchQuery, selectedCategory} = useSelector((state)=> state.search)
     
       const{itemsPerPage, currentPage}= useSelector((state) => state.pagination)
-
+      
 
        const isLoading = useSelector((state) => state.product.isLoading)
 
+       const {categoryId} = useParams();
       const {name} =useParams();
       const location= useLocation();
       const queryParams= new URLSearchParams(location.search)
       const initialSearchQuery = queryParams.get("search") || name || "";
 
 
-
-    useEffect(() => {  
+    useEffect(() => {
+      if(categoryId){
+        dispatch((getProductsByCategoryId(categoryId)))
+      }else{
         dispatch(getAllProducts());
-    }, [dispatch]);// Only fetch date when product state change
+      }
+    },[dispatch, categoryId])
+
 
     useEffect(() => {
       dispatch(setInitialSearchQuery(initialSearchQuery))
     },[initialSearchQuery, dispatch])
 
+  //   useEffect(() => {  
+  //     dispatch(getAllProducts());
+  // }, [dispatch]);// Only fetch date when product state changes
+
+  //   useEffect(() => {
+  //     dispatch(getProductsByCategory(categoryId))
+  //   },[dispatch, ])
 useEffect(() => {
     const results = products.filter((product) =>{
     const matchesQuery = product.name.toLowerCase().includes(searchQuery.toLowerCase());

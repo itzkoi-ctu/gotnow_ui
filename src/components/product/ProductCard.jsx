@@ -2,6 +2,7 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ProductImage from "../utils/ProductImage";
+import { FaShoppingCart } from "react-icons/fa";
 
 const ProductCard = ({ products }) => {
   return (
@@ -21,9 +22,16 @@ const ProductCard = ({ products }) => {
                 {product.name} - {product.description}
               </p>
               <h4 className='price'>${product.price}</h4>
-              <p className='text-success'>{product.inventory} in stock.</p>
+              <p className='text-success'>{" "}{product.inventory > 0 ? (
+                <span>{product.inventory} in stock</span>
+              ) : (
+                <span className="text-danger">Out of stock</span>
+              )}</p>
+              
               <div className='d-flex gap-2'>
-                <button className='shop-now-button'>Add to cart</button>
+                <button className='shop-now-button'>{" "}
+                  <FaShoppingCart/>
+                  Add to cart</button>
               </div>
             </Card.Body>
           </Card>

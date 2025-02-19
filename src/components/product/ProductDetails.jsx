@@ -2,22 +2,43 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
 import { getProductById } from '../../store/features/productSlice'
-import ProductImage from '../utils/ProductImage';
 import { FaShoppingCart } from 'react-icons/fa';
 import ImageZoomify from '../common/ImageZoomify';
+import { QuantityUpdater } from '../utils/QuantityUpdater';
+import { addToCart } from '../../store/features/cartSlice';
+import { toast, ToastContainer } from 'react-toastify';
 const ProductDetails = () => {
     const {productId} = useParams();
-    const product= useSelector((state) => state.product.product)
+    const {product, quantity}= useSelector((state) => state.product)
+    const {errorMessage, successMessage}= useSelector((state) => state.cart)
+
     const dispatch= useDispatch();
 
     useEffect(()=> {
         dispatch(getProductById(productId))
+        console.log(errorMessage)
     }, [dispatch, productId])
+
+
+
+    const handleAddToCart = () => {
+      try{
+        dispatch(addToCart({productId, quantity}))
+        toast.success(successMessage)
+
+      }catch(error){
+        if(errorMessage){
+          toast.error(errorMessage)
+      }else{
+        toast.error(error.message)
+      }
+    }}
 
   return (
     <div className='container'>
       {product ? (
         <div className='row product-details'>
+          <ToastContainer />
           <div className='col-md-2'>
             {product.images.map((img) => (
               <div key={img.id} className='image-container'>
@@ -44,9 +65,12 @@ const ProductDetails = () => {
               )}
             </p>
             <p>Quantity:</p>
-            {/* <QuantityUpdater /> */}
+            <QuantityUpdater/>
+
             <div className='d-flex gap-2 mt-3'>
-              <button className='add-to-cart-button'>
+              <button 
+              onClick={handleAddToCart}
+              className='add-to-cart-button'>
                 {" "}
                 <FaShoppingCart /> Add to cart
               </button>

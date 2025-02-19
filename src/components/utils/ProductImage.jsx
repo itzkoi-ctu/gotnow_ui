@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
     
     useEffect(() => {
         const fetchProductImage = async (id) => {
-            console.log("Fetching image for product id: "+ id)
+            // console.log("Fetching image for product id: "+ id)
         try{
             
             const response = await fetch(

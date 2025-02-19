@@ -3,6 +3,7 @@ import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
+  const userId= 1;
   return (
     <Navbar expand='lg' sticky='top' className='nav-bg'>
      <Container>
@@ -57,6 +58,7 @@ const NavBar = () => {
                           
 
                </NavDropdown>
+               <Link to={`user/${userId}/my-cart`}>cart</Link>
           </Nav>
                   
 

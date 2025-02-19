@@ -11,7 +11,7 @@ const paginationSlice = createSlice({
     initialState,
     reducers: {
         setItemsPerPage: (state, action) => {
-            state.itemPerPage = action.payload;
+            state.itemsPerPage = action.payload;
         },
         setTotalItems: (state, action) => {
             state.totalItems = action.payload;

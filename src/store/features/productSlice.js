@@ -1,5 +1,5 @@
 import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
-import api from "../../components/services/api"
+import {api} from "../../components/services/api"
 export const getAllProducts = createAsyncThunk(
     "product/getAllProducts",
     async () => {
@@ -34,6 +34,15 @@ export const getProductById= createAsyncThunk(
     }
 )
 
+export const getProductsByCategoryId= createAsyncThunk(
+    "product/getProductsByCategoryId",
+    async (categoryId) => {
+        const response = await api.get(`products/category/${categoryId}/products`);
+        console.log("response from slice (getProductsByCategory):",response.data.data)
+        return response.data.data;
+    }
+)
+
 const initialState = {
     
     products: [],
@@ -41,6 +50,7 @@ const initialState = {
     brands:  [],
     distinctProducts: [],
     selectedBrands: [],
+    quantity: 1,
     errorMessage: null,
     isLoading: false
 }   
@@ -56,7 +66,15 @@ const productSlice = createSlice({
             state.selectedBrands= state.selectedBrands.filter((item) => item !== brand)
         }
 
-    }
+        } ,  
+        decreaseQuantity(state) {
+            if(state.quantity > 1){
+                state.quantity -= 1;
+            }
+        },
+        increaseQuantity(state) {
+            state.quantity += 1;
+        }
 
 
     },
@@ -99,7 +117,11 @@ const productSlice = createSlice({
             .addCase(getProductById.fulfilled,(state, action) => {
                 state.product= action.payload;
                 state.isLoading=false;       
-        })
+            })
+            .addCase(getProductsByCategoryId.fulfilled,(state, action) => {
+                state.products= action.payload;
+                state.isLoading=false;
+            })
 
 
         }
@@ -107,5 +129,5 @@ const productSlice = createSlice({
     
     
 });
-export const {filterByBrands}= productSlice.actions
+export const {filterByBrands, decreaseQuantity, increaseQuantity}= productSlice.actions
 export default productSlice.reducer;

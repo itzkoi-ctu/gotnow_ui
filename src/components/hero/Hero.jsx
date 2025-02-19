@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import HeroSlider  from './HeroSlider'
 import { SearchBar } from '../search/SearchBar'
-import { useDispatch } from 'react-redux'
 
  const Hero = () => {
 

@@ -60,7 +60,6 @@ export const Home = () => {
       <ToastContainer/>
       {currentProducts
       &&currentProducts.map((product, index)=>{
-        console.log(`Rendering product #${index + 1}:`, product);
         return(
         <Card key={product.id} className='home-product-card'>
         <Link to={`products/${product.name}`} className= 'link'>
@@ -73,7 +72,11 @@ export const Home = () => {
         <Card.Body className='product-description'>
           <p>{product.name} - {product.description}</p>
           <h4 className='price'>${product.price}</h4>
-          <p className='text-success'>{product.inventory} in stock.</p>
+          <p className='text-success'>{product.inventory > 0 ?(
+            <span>{product.inventory} in stock</span>
+          ):(
+            <span className='text-danger'>Out of stock</span>
+          )} </p>
           <Link 
           to={`products/${product.name}`} 
           className='shop-now-button'

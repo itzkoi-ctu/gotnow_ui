@@ -1,10 +1,10 @@
 import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
-import api from "../../components/services/api"
+import {api} from "../../components/services/api"
 export const getAllCategories = createAsyncThunk(
     "category/getAllCategories",
     async () => {
         const response = await api.get("/categories/all");
-        console.log(response.data.data)
+        // console.log(response.data.data)
         return response.data.data;
     }
 )

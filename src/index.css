@@ -107,19 +107,18 @@
 }
 
 .cart-image-container {
-  width: 50%;
-  height: 50px;
+  width: 50px; /* Hoặc % tuỳ ý */
+  height: 50px ; /* Đặt chiều cao cố định */
   overflow: hidden;
-  position: relative;
+  display: flex; /* Sử dụng Flexbox để căn giữa */
+  justify-content: center;
+  align-items: center;
 }
 
 .cart-image-container img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 50px;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Hiển thị ảnh với tỷ lệ đúng, không cắt */
 }
 
 
@@ -276,19 +275,34 @@
 
 .home-shop-button,
 .deals-button {
-  padding: 10px 20px;
+  padding: 12px 24px;
+  margin: 5px;
   font-size: 16px;
+  font-weight: bold;
   color: white;
-  background-color: #ff5722;
+  background: linear-gradient(135deg, #ff7043, #ff5722);
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.home-shop-button:hover,
+.deals-button:hover {
+  background: linear-gradient(135deg, #ff5722, #e64a19);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.deals-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* .home-shop-button:hover,
 .deals-button:hover {
   background-color: #e64a19;
-}
+} */
 
 .home-button-container {
   display: flex;
@@ -308,7 +322,10 @@
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
+.shop-now-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
 .shop-now-button:hover {
   background-color: var(--search-button-color)
       /* Darker shade on hover */

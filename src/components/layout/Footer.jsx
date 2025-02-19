@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
-import {useSelector} from 'react-redux'
+import {getAllCategories} from '../../store/features/categorySlice'
+import {useDispatch, useSelector} from 'react-redux'
+import {Link} from 'react-router-dom'
  const Footer = () => {
+  const dispatch = useDispatch()
   const categories= useSelector((state) => state.category.category)
+
+  useEffect(() => {
+    dispatch(getAllCategories())
+  }, [dispatch])
   return (
     <footer className='mega-footer'>
       <div className='footer-container'>
@@ -15,7 +22,10 @@ import {useSelector} from 'react-redux'
           <h3>Category</h3>
           <ul>
             {categories.map((category)=> (
-              <li key={category.id} value={category.name}>{category.name}</li>
+              <li key={category.id}> 
+              {/* {console.log("category",category.id)} */}
+              <Link to={`/products/category/${category.id}/products`}>{category.name}</Link>
+              </li>
             ))}
           </ul>
         </div>
