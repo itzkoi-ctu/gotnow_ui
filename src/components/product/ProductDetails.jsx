@@ -1,38 +1,44 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
-import { getProductById } from '../../store/features/productSlice'
+import { getProductById, setQuantity } from '../../store/features/productSlice'
 import { FaShoppingCart } from 'react-icons/fa';
 import ImageZoomify from '../common/ImageZoomify';
 import { QuantityUpdater } from '../utils/QuantityUpdater';
 import { addToCart } from '../../store/features/cartSlice';
 import { toast, ToastContainer } from 'react-toastify';
+import StockStatus from '../utils/StockStatus';
 const ProductDetails = () => {
     const {productId} = useParams();
     const {product, quantity}= useSelector((state) => state.product)
     const {errorMessage, successMessage}= useSelector((state) => state.cart)
-
+    const productOutOfStock = product?.inventory <= 0;
     const dispatch= useDispatch();
 
     useEffect(()=> {
         dispatch(getProductById(productId))
-        console.log(errorMessage)
     }, [dispatch, productId])
 
 
 
-    const handleAddToCart = () => {
-      try{
-        dispatch(addToCart({productId, quantity}))
-        toast.success(successMessage)
-
-      }catch(error){
-        if(errorMessage){
-          toast.error(errorMessage)
-      }else{
-        toast.error(error.message)
+    const handleAddToCart = async () => {
+      try {
+          const result = await dispatch(addToCart({productId, quantity})).unwrap();
+          toast.success("Product added to cart successfully");
+      } catch (error) {
+          toast.error(error.message || "Failed to add product to cart");
       }
-    }}
+  }
+
+  const handleIncreaseQuantity = () => {
+      dispatch(setQuantity(quantity + 1))
+  }
+
+  const handleDecreaseQuantity = () => {
+      if(quantity > 1) {
+          dispatch(setQuantity(quantity - 1))
+      }
+  }
 
   return (
     <div className='container'>
@@ -55,26 +61,29 @@ const ProductDetails = () => {
               Rating: <span className='rating'>some stars</span>
             </p>
             <p>
-              {" "}
-              {product.inventory > 0 ? (
-                <span className='text-success'>
-                  {product.inventory} in stock
-                </span>
-              ) : (
-                <span className='text-danger'>Out of stock</span>
-              )}
+              <StockStatus inventory={product.inventory}/>
             </p>
             <p>Quantity:</p>
-            <QuantityUpdater/>
+            <QuantityUpdater
+              quantity={quantity}
+              onDecrease={handleDecreaseQuantity}
+              onIncrease={handleIncreaseQuantity}
+              disabled={productOutOfStock}
+            />
 
             <div className='d-flex gap-2 mt-3'>
               <button 
               onClick={handleAddToCart}
-              className='add-to-cart-button'>
+              className='add-to-cart-button'
+              disabled={productOutOfStock}
+              >
+              
                 {" "}
                 <FaShoppingCart /> Add to cart
               </button>
-              <button className='buy-now-button'>Buy now</button>
+              <button className='buy-now-button'
+              disabled={productOutOfStock}
+              >Buy now</button>
             </div>
           </div>
         </div>

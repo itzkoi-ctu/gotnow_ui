@@ -9,6 +9,7 @@ import SideBar from '../common/SideBar';
 import {setInitialSearchQuery} from "../../store/features/searchSlice";
 import { useLocation, useParams } from 'react-router-dom';
 import LoadSpinner from '../common/LoadSpinner';
+import { ToastContainer } from 'react-toastify';
 const Product = () => {
     const dispatch = useDispatch();
     const {products, selectedBrands} = useSelector((state) => state.product)
@@ -87,6 +88,7 @@ useEffect(() => {
 
 
     <>
+    <ToastContainer/>
     <div className='d-flex justify-content-center'>
         <div className='col-md-6 mt-2'>
 

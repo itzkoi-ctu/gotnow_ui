@@ -3,8 +3,24 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ProductImage from "../utils/ProductImage";
 import { FaShoppingCart } from "react-icons/fa";
-
+import StockStatus from "../utils/StockStatus";
+import { deleteProduct } from "../../store/features/productSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 const ProductCard = ({ products }) => {
+
+  const dispatch= useDispatch()
+
+  const handleDeleteProduct = async (productId) => {
+      try{
+          const result= await dispatch(deleteProduct(productId)).unwrap()
+          console.log("message: "+ result.message)
+          toast.success(result.message)
+      }catch(error){
+          toast.error(error.message)
+      }
+  }
+
   return (
     <main className='row m-2 m-2'>
       {products.map((product) => (
@@ -22,17 +38,22 @@ const ProductCard = ({ products }) => {
                 {product.name} - {product.description}
               </p>
               <h4 className='price'>${product.price}</h4>
-              <p className='text-success'>{" "}{product.inventory > 0 ? (
-                <span>{product.inventory} in stock</span>
-              ) : (
-                <span className="text-danger">Out of stock</span>
-              )}</p>
+              <p>
+              <StockStatus inventory={product.inventory}/>
+            </p>
               
               <div className='d-flex gap-2'>
+              <Link to={`/update-product/${product.id}/update`}>Edit</Link>
+              <Link onClick={() => handleDeleteProduct(product.id)} >Delete</Link>
+
                 <button className='shop-now-button'>{" "}
                   <FaShoppingCart/>
                   Add to cart</button>
               </div>
+
+
+              
+
             </Card.Body>
           </Card>
         </div>

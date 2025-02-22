@@ -4,16 +4,45 @@ export const getAllProducts = createAsyncThunk(
     "product/getAllProducts",
     async () => {
         const response = await api.get("/products/all");
-        console.log(response.data.data)
         return response.data.data;
     }
 )
 
+
+export const addNewProduct = createAsyncThunk(
+    "product/addNewProduct",
+    async (product) => {
+        const response = await api.post("/products/add", product);
+        return response.data.data;
+    }
+)
+export const deleteProduct = createAsyncThunk(
+    "product/deleteProduct",
+    async (productId) => {
+        const response = await api.delete(`/products/product/${productId}/delete`);
+        console.log("response delete: "+response.data)
+
+        return response.data;
+    }
+)
+export const updateProduct = createAsyncThunk(
+    "products/updateProduct",
+    async ({ productId, updatedProduct }) => {
+      const response = await api.put(
+        `/products/product/${productId}/update`,
+        updatedProduct
+      );
+      console.log("updatedProduct: "+updateProduct)
+      console.log("response: "+response.data)
+
+      return response.data;
+    }
+  );
+  
 export const getAllBrands = createAsyncThunk(
     "product/getAllBrands",
     async () => {
         const response = await api.get("/products/distinct/brands");
-        console.log(response.data.data)
         return response.data.data;
     }
 )
@@ -29,7 +58,7 @@ export const getProductById= createAsyncThunk(
     "product/getProductById",
     async (productId) => {
         const response = await api.get(`products/product/${productId}/product`);
-        console.log("response from slice:",response.data.data)
+        // console.log("response from slice:",response.data.data)
         return response.data.data;
     }
 )
@@ -38,7 +67,7 @@ export const getProductsByCategoryId= createAsyncThunk(
     "product/getProductsByCategoryId",
     async (categoryId) => {
         const response = await api.get(`products/category/${categoryId}/products`);
-        console.log("response from slice (getProductsByCategory):",response.data.data)
+        // console.log("response from slice (getProductsByCategory):",response.data.data)
         return response.data.data;
     }
 )
@@ -52,13 +81,13 @@ const initialState = {
     selectedBrands: [],
     quantity: 1,
     errorMessage: null,
-    isLoading: false
+    isLoading: true
 }   
 const productSlice = createSlice({
     name: "product",
     initialState,
     reducers: {
-        filterByBrands(state, action) {
+        filterByBrands: (state, action) => {
             const {brand, isChecked} = action.payload;
             if(isChecked){
                 state.selectedBrands.push(brand)
@@ -66,14 +95,12 @@ const productSlice = createSlice({
             state.selectedBrands= state.selectedBrands.filter((item) => item !== brand)
         }
 
-        } ,  
-        decreaseQuantity(state) {
-            if(state.quantity > 1){
-                state.quantity -= 1;
-            }
+        },  
+        setQuantity: (state,action) => {
+            state.quantity= action.payload
         },
-        increaseQuantity(state) {
-            state.quantity += 1;
+        addBrand: (state, action) => {
+            state.brands.push(action.payload)
         }
 
 
@@ -122,6 +149,21 @@ const productSlice = createSlice({
                 state.products= action.payload;
                 state.isLoading=false;
             })
+            .addCase(addNewProduct.fulfilled, (state, action)=> {
+                state.products.push(action.payload);
+                state.errorMessage= null;
+                state.isLoading= false;
+            })
+            .addCase(updateProduct.fulfilled, (state, action) => {
+                state.product= action.payload.data;
+                state.errorMessage = null;
+                state.isLoading = false;
+            })
+            .addCase(deleteProduct.fulfilled, (state, action) => {
+                state.products = state.products.filter(
+                  (product) => product.id !== action.payload.data
+                );
+              });
 
 
         }
@@ -129,5 +171,5 @@ const productSlice = createSlice({
     
     
 });
-export const {filterByBrands, decreaseQuantity, increaseQuantity}= productSlice.actions
+export const {filterByBrands, setQuantity, addBrand}= productSlice.actions
 export default productSlice.reducer;

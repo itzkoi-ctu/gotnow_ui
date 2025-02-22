@@ -9,6 +9,7 @@ import {getProductsDistinct} from '../../store/features/productSlice'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setTotalItems } from '../../store/features/paginationSlice'
+import StockStatus from '../utils/StockStatus'
 export const Home = () => {
     const dispatch = useDispatch();
 
@@ -72,11 +73,9 @@ export const Home = () => {
         <Card.Body className='product-description'>
           <p>{product.name} - {product.description}</p>
           <h4 className='price'>${product.price}</h4>
-          <p className='text-success'>{product.inventory > 0 ?(
-            <span>{product.inventory} in stock</span>
-          ):(
-            <span className='text-danger'>Out of stock</span>
-          )} </p>
+          <p>
+              <StockStatus inventory={product.inventory}/>
+            </p>
           <Link 
           to={`products/${product.name}`} 
           className='shop-now-button'

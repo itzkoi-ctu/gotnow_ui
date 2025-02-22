@@ -9,6 +9,7 @@ export const getAllCategories = createAsyncThunk(
     }
 )
 
+
 const initialState = {
     category: [],
     errorMessage: null,
@@ -16,7 +17,11 @@ const initialState = {
 const categorySlice = createSlice({
     name: "category",
     initialState,
-    reducers: {},
+    reducers: {
+        addCategory: (state, action) => {
+            state.category.push(action.payload);
+          },
+    },
         extraReducers: (buider) => {
             buider
             .addCase(getAllCategories.fulfilled, (state, action) => {
@@ -39,4 +44,6 @@ const categorySlice = createSlice({
     
     
 });
+export const { addCategory } = categorySlice.actions;
+
 export default categorySlice.reducer
