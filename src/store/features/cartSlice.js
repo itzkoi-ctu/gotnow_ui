@@ -2,13 +2,19 @@ import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {api} from "../../components/services/api";
 
 
+const accessToken= localStorage.getItem("authToken")
+
 export const addToCart = createAsyncThunk(
     "cart,addToCart", async ({productId, quantity})=> {
         const formData = new FormData();
         formData.append("productId", productId);
         formData.append("quantity", quantity);
 
-        const response = await api.post("/cartItems/item/add", formData);
+        const response = await api.post("/cartItems/item/add", formData, {
+            headers:{
+               Authorization: `Bearer ${accessToken}`
+            } 
+        });
         return response.data;
     }
 )

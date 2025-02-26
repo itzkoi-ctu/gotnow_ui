@@ -512,7 +512,18 @@
   color: #333;
 }
 
-
+.unauthorized
+{
+    background-image: url('assets/images/unauthorized.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    padding: 100px;
+    color: #d6edec;
+    font-size: 30px;
+    margin: 10px;
+}
 
 :root {
   --search-button-color: #c38212;

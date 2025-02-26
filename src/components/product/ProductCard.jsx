@@ -5,12 +5,13 @@ import ProductImage from "../utils/ProductImage";
 import { FaShoppingCart } from "react-icons/fa";
 import StockStatus from "../utils/StockStatus";
 import { deleteProduct } from "../../store/features/productSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 const ProductCard = ({ products }) => {
 
   const dispatch= useDispatch()
-
+  const userRoles= useSelector((state) => state.auth.roles)
+  const isAdmin= userRoles.includes("ROLE_ADMIN")
   const handleDeleteProduct = async (productId) => {
       try{
           const result= await dispatch(deleteProduct(productId)).unwrap()
@@ -43,9 +44,12 @@ const ProductCard = ({ products }) => {
             </p>
               
               <div className='d-flex gap-2'>
+              {isAdmin&&(
+                <>
               <Link to={`/update-product/${product.id}/update`}>Edit</Link>
               <Link onClick={() => handleDeleteProduct(product.id)} >Delete</Link>
-
+              </>
+            )}
                 <button className='shop-now-button'>{" "}
                   <FaShoppingCart/>
                   Add to cart</button>

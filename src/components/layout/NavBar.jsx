@@ -4,15 +4,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdAccountCircle } from "react-icons/md";
 import { RiBillLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/features/authSlice";
 const NavBar = () => {
+
+  const dispatch= useDispatch()
   const navigate= useNavigate()
+  const userRoles= useSelector((state) => state.auth.roles)
+
   const handleNavigateToCart = () => {
     navigate(`/user/${userId}/my-cart`);
   };
+
+
+  const handleLogout = () =>{
+    dispatch(logout())
+    window.location.href="/"
+  }
   const cart = useSelector((state) => state.cart)
-  const userId= 2;
+  const userId= localStorage.getItem("userId");
   return (
     <Navbar expand='lg' sticky='top' className='nav-bg'>
      <Container>
@@ -33,43 +43,60 @@ const NavBar = () => {
             </Nav.Link>
           </Nav>
 
+
+          {userRoles.includes("ROLE_ADMIN")&&(
           <Nav className='me-auto'>
             <Nav.Link to={"/add-product"} as={Link}>
               Manage Products
             </Nav.Link>
           </Nav>
+          )}
 
           <Nav className='ms-auto'>
             <NavDropdown  title='Account'>
+              {userId ?(
+                  <>
+                  <NavDropdown.Item to={"#"} as={Link}>
+                    <MdAccountCircle/>{" "}My Account
+                   </NavDropdown.Item>
+                                
+                  <NavDropdown.Divider />                              
+  
+                  <NavDropdown.Item to={`order/${userId}/my-order`} as={Link}>
+                   <RiBillLine/>{" "} My Orders
+                  </NavDropdown.Item>
+  
+                  <NavDropdown.Divider />
+                                
+                   <NavDropdown.Item to={"#"} onClick={handleLogout}>
+                       Logout
+                  </NavDropdown.Item>
+                                
+  
+                </>
+
+              ):
               
-              <>
-                <NavDropdown.Item to={"#"} as={Link}>
-                  <MdAccountCircle/>{" "}My Account
-                 </NavDropdown.Item>
-                              
-                <NavDropdown.Divider />                              
-
-                <NavDropdown.Item to={`order/${userId}/my-order`} as={Link}>
-                 <RiBillLine/>{" "} My Orders
-                </NavDropdown.Item>
-
-                <NavDropdown.Divider />
-                              
-                 <NavDropdown.Item to={"#"}>
-                     Logout
-                </NavDropdown.Item>
-                              
-
-              </>
-
-              <NavDropdown.Item to={"#"} as={Link}>
+              <NavDropdown.Item to={"/login"} as={Link}>
                 Login
               </NavDropdown.Item>
+              
+              
+              }
+
+
+
+              
+
+              {/* <NavDropdown.Item to={"/register"} as={Link}>
+                Register
+              </NavDropdown.Item> */}
                           
 
                </NavDropdown>
              
-               <Link
+             {userId &&(
+              <Link
               to={`/user/${userId}/my-cart`}
               className='nav-link me-1 position-relative'>
               <FaShoppingCart className='shopping-cart-icon' />
@@ -79,6 +106,8 @@ const NavBar = () => {
                 <div className='badge-overlay'>0</div>
               )}
             </Link>
+             )}
+               
                {/* <FaShoppingCart onClick={handleNavigateToCart} style={{cursor: 'pointer', margin: '10'}}/> */}
                
           </Nav>
