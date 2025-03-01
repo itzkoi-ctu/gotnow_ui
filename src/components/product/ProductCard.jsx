@@ -39,9 +39,9 @@ const ProductCard = ({ products }) => {
               </div>
             </Link>
             <Card.Body>
-              <p className='product-description'>
+              {/* <p className='product-description'>
                 {product.name} - {product.description}
-              </p>
+              </p> */}
               <h4 className='price'>${product.price}</h4>
               <p>
               <StockStatus inventory={product.inventory}/>
