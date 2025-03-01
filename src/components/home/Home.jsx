@@ -71,7 +71,7 @@ export const Home = () => {
             </div>
          </Link>
         <Card.Body className='product-description'>
-          <p>{product.name} </p> 
+          <p>{product.name} - {product.brand}</p> 
           {/* {product.description} */}
           <h4 className='price'>${product.price}</h4>
           <p>

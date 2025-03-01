@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 
  const ProductImage = ({productId}) => {
     const [productImage, setProductImage] = useState(null)
-    
+    const BASE_Url= "https://gotnow-api.onrender.com"
+    const localHost= "http://localhost:8080"
     useEffect(() => {
         const fetchProductImage = async (id) => {
             // console.log("Fetching image for product id: "+ id)
         try{
             
             const response = await fetch(
-                `https://gotnow-api.onrender.com/api/v1/images/image/download/${id}`
+                localHost+`/api/v1/images/image/download/${id}`
             )
             console.log("image"+response)
             const blob = await response.blob()

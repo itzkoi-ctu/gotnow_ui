@@ -4,6 +4,7 @@ import 'react-medium-image-zoom/dist/styles.css'
 const ImageZoomify = ({productId}) => {
 
     const BASE_Url= "https://gotnow-api.onrender.com"
+    const localHost= "http://localhost:8080"
     const [productImage, setProductImage] = useState(null)
         
         useEffect(() => {
@@ -12,7 +13,7 @@ const ImageZoomify = ({productId}) => {
             try{
                 
                 const response = await fetch(
-                    BASE_Url+`/api/v1/images/image/download/${id}`
+                    localHost+`/api/v1/images/image/download/${id}`
                 )
                 console.log("image"+response)
                 const blob = await response.blob()

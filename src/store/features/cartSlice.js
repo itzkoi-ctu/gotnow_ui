@@ -20,8 +20,7 @@ export const getUserCart = createAsyncThunk(
         console.log("getUserCart"+userId)
          const response = await api.get(`/carts/user/${userId}/cart`);
         // const response = await api.get(`/carts/user/1/cart`);
-        // console.log("Response from cart slice: "+ response.data)
-        // console.log("Response from cart slice2: "+ response.data.data)
+        
 
         return response.data.data;
     }
@@ -41,8 +40,9 @@ export const removeItemFromCart = createAsyncThunk(
 )   
 
 export const updateQuantity = createAsyncThunk(
-    "cart/updateQuantity", async ({cartId, itemId, newQuantity}) => {
-         const response = await api.put(`/cartItems/cart/${cartId}/item/${itemId}/update?quantity=${newQuantity}`);
+    "cart/updateQuantity", 
+    async ({cartId, itemId, newQuantity}) => {
+          await api.put(`/cartItems/cart/${cartId}/item/${itemId}/update?quantity=${newQuantity}`);
        
         return {itemId, newQuantity};
     }

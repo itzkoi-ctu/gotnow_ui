@@ -71,8 +71,8 @@ const AddressForm = ({
               onChange={onChange}>
               <option value=''>select country...</option>
               {countries.map((country, index) => (
-                <option key={index} value={country}>
-                  {country}
+                <option key={index} value={country.code}>
+                  {country.name}
                 </option>
               ))}
             </Form.Select>

@@ -40,7 +40,7 @@ const ProductCard = ({ products }) => {
             </Link>
             <Card.Body>
               <p className='product-description'>
-                {product.name} 
+                {product.name} - {product.brand}
               </p>
               {/* - {product.description} */}
               <h4 className='price'>${product.price}</h4>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearCart,
@@ -9,7 +9,7 @@ import {
 } from "../../store/features/cartSlice";
 import { Card } from "react-bootstrap";
 import ProductImage from "../utils/ProductImage";
-import {QuantityUpdater} from "../utils/QuantityUpdater";
+import QuantityUpdater from "../utils/QuantityUpdater";
 import LoadSpinner from "../common/LoadSpinner";
 import { toast, ToastContainer } from "react-toastify";
 import { placeOrder } from "../../store/features/orderSlice";
@@ -21,7 +21,7 @@ const Cart = () => {
   const cartId = useSelector((state) => state.cart.cartId);
   const isLoading = useSelector((state) => state.cart.isLoading);
   const {successMessage , errorMessage} = useSelector((state) => state.order);
-
+  const navigate= useNavigate()
   useEffect(() => {
     dispatch(getUserCart(userId));
   }, [dispatch, userId]);
@@ -62,18 +62,8 @@ const Cart = () => {
   };
 
   const handlePlaceOrder = async () => {
-    if (cart.items.length > 0) {
-      try {
-        const result = await dispatch(placeOrder(userId)).unwrap();
-        dispatch(clearCart());
-        toast.success(result.message);
-      } catch (error) {      
-        toast.error(error.message);
-       
-      }
-    } else {
-      toast.error("Cannot place order on empty cart");
-    }
+    await dispatch(getUserCart(userId))
+    navigate(`/checkout/${userId}/checkout`)
   };
 
   if (isLoading) {

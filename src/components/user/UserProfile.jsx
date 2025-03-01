@@ -16,6 +16,7 @@ import{
   setUserAddresses,
 
 }from '../../store/features/userSlice'
+import LoadSpinner from '../common/LoadSpinner';
 const UserProfile = () => {
     const dispatch = useDispatch();
   const { userId } = useParams();
@@ -136,8 +137,15 @@ const UserProfile = () => {
   useEffect(() => {
     dispatch(getOrderByUserId(userId));
   }, [dispatch, userId]);
-  console.log("User info: "+ user)
-  console.log("orders: "+ orders)
+
+  if(loading){
+    return (
+      <div>
+        <LoadSpinner/>
+      </div>
+    )
+  }
+
   return (
     <Container className='mt-5 mb-5'>
       <ToastContainer />
@@ -271,14 +279,14 @@ const UserProfile = () => {
                           orders.map((order, index) => {
                             return (
                               <tr key={index}>
-                                <td>{order.id}</td>
+                                <td>{order?.id}</td>
                                 <td>
                                   {new Date(
-                                    order.orderDate
+                                    order?.orderDate
                                   ).toLocaleDateString()}
                                 </td>
-                                <td>${order.totalAmount?.toFixed(2)}</td>
-                                <td>{order.status}</td>
+                                <td>${order?.totalAmount?.toFixed(2)}</td>
+                                <td>{order?.orderStatus}</td>
                                 <td>
                                   <Table size='sm' striped bordered hover>
                                     <thead>
@@ -292,8 +300,8 @@ const UserProfile = () => {
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {Array.isArray(order.items) &&
-                                        order.items.map((item, itemIndex) => (
+                                      {Array.isArray(order?.items) &&
+                                        order?.items.map((item, itemIndex) => (
                                           <tr key={itemIndex}>
                                             <td>{item.productId}</td>
                                             <td>{item.productName}</td>

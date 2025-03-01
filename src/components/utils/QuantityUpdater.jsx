@@ -1,32 +1,36 @@
-import React from 'react'
-import { BsDash, BsPlus } from 'react-icons/bs'
-export const QuantityUpdater = ({disabled,quantity, onIncrease, onDecrease}) => {
-    
+import React from "react";
+import { BsDash, BsPlus } from "react-icons/bs";
 
-
+const QuantityUpdater = ({ disabled, quantity, onIncrease, onDecrease }) => {
   return (
-    <section style={{width: '150px'}}>
-        <div className='input-group'>
-            <button 
-            onClick={onDecrease} 
-            disabled={disabled}
-            className='btn -btn-outline-secondary' value={quantity}  > 
-            {" "}
-            <BsDash/>
-            </button>
-            <input name='quantity' type='number' value={quantity} readOnly disabled={disabled} className='form-control text-center'>
-            
-            
-            </input>
-            <button 
-            onClick={onIncrease} 
-            disabled={disabled}
-            className='btn -btn-outline-secondary'> 
-            {" "}
-            <BsPlus/>
-            </button>
+    <section style={{ width: "150px" }}>
+      <div className='input-group'>
+        <button
+          onClick={onDecrease}
+          className='btn btn-outline-secondary'
+          disabled={disabled}>
+          {" "}
+          <BsDash />
+        </button>
 
-        </div>
+        <input
+          name='quantity'
+          type='number'
+          value={quantity}
+          readOnly
+          disabled={disabled}
+          className='form-control text-center'></input>
+
+        <button
+          onClick={onIncrease}
+          className='btn btn-outline-secondary'
+          disabled={disabled}>
+          {" "}
+          <BsPlus />
+        </button>
+      </div>
     </section>
-  )
-}
+  );
+};
+
+export default QuantityUpdater;

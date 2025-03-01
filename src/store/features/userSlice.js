@@ -37,8 +37,11 @@ export const getCountryNames = createAsyncThunk(
     "user/getCountryNames",
     async () => {
       const response = await axios.get("https://restcountries.com/v3.1/all");
-      const countryNames = response.data.map((country) => country.name.common);
-      countryNames.sort((a, b) => a.localeCompare(b));
+      const countryNames = response.data.map((country) => ({
+        name: country.name.common,
+        code: country.cca2
+      }));
+      countryNames.sort((a, b) => a.name.localeCompare(b.name));
       console.log("The country names from the slice", response.data);
       return countryNames;
     }

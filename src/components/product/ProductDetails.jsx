@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { getProductById, setQuantity } from '../../store/features/productSlice'
 import { FaShoppingCart } from 'react-icons/fa';
 import ImageZoomify from '../common/ImageZoomify';
-import { QuantityUpdater } from '../utils/QuantityUpdater';
+import QuantityUpdater from '../utils/QuantityUpdater';
 import { addToCart } from '../../store/features/cartSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import StockStatus from '../utils/StockStatus';
