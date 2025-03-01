@@ -71,7 +71,8 @@ export const Home = () => {
             </div>
          </Link>
         <Card.Body className='product-description'>
-          {/* <p>{product.name} - {product.description}</p> */}
+          <p>{product.name} </p> 
+          {/* {product.description} */}
           <h4 className='price'>${product.price}</h4>
           <p>
               <StockStatus inventory={product.inventory}/>
