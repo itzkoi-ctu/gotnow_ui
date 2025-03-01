@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Row, Button, Form, Col, Container } from "react-bootstrap";
 import { getCountryNames, registerUser } from "../../store/features/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-
+import AddressForm from "../common/AddressForm";
 const UserRegistration = () => {
   const dispatch = useDispatch();
   const [countries, setCountries] = useState([]);
-
+const errorMessage= useSelector((state) => state.user.errorMessage)
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -61,7 +61,7 @@ const UserRegistration = () => {
       resetForm();
       toast.success(response.message);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(errorMessage);
     }
   };
 
@@ -132,91 +132,15 @@ const UserRegistration = () => {
         </Form.Group>
 
         <h4 className='mt-4'>Addresses</h4>
-
         {addresses.map((address, index) => (
           <div key={index} className='border p-3 mb-3 rounded'>
             <h4>Address {index + 1}</h4>
-
-            <Row>
-              <Col md={4}>
-                <Form.Group controlId={`country-${index}`}>
-                  <Form.Label>Country:</Form.Label>
-                  <Form.Control
-                    as='select'
-                    name='country'
-                    value={address.country}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    required>
-                    <option value=''>Select a country</option>
-                    {countries.map((country, index) => (
-                      <option key={index} value={country}>
-                        {country}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-
-              <Col md={4}>
-                <Form.Group controlId={`state-${index}`}>
-                  <Form.Label>State/Province:</Form.Label>
-                  <Form.Control
-                    type='text'
-                    name='state'
-                    value={address.state}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col md={4}>
-                <Form.Group controlId={`city-${index}`}>
-                  <Form.Label>City:</Form.Label>
-                  <Form.Control
-                    type='text'
-                    name='city'
-                    value={address.city}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Form.Group controlId={`street-${index}`}>
-              <Form.Label>Street:</Form.Label>
-              <Form.Control
-                type='text'
-                name='street'
-                value={address.street}
-                onChange={(e) => handleAddressChange(index, e)}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group controlId={`addressType-${index}`}>
-              <Form.Label>Address Type:</Form.Label>
-              <Form.Control
-                as='select'
-                name='addressType'
-                value={address.addressType}
-                onChange={(e) => handleAddressChange(index, e)}>
-                <option value='HOME'>Home</option>
-                <option value='OFFICE'>Office</option>
-                <option value='SHIPPING'>Shipping</option>
-              </Form.Control>
-            </Form.Group>
-
-            <div className='d-flex justify-content-end'>
-              <Button
-                variant='danger'
-                className='mt-2'
-                onClick={() => removeAddress(index)}
-                size='sm'>
-                Remove Address
-              </Button>
-            </div>
+            <AddressForm
+              address={address}
+              onChange={(e) => handleAddressChange(index, e)}
+              onCancel={() => removeAddress(index)}
+              showButtons={true}
+            />
           </div>
         ))}
 

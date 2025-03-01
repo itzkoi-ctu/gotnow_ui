@@ -7,8 +7,9 @@ import StockStatus from "../utils/StockStatus";
 import { deleteProduct } from "../../store/features/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const ProductCard = ({ products }) => {
-
+  const navigate= useNavigate()
   const dispatch= useDispatch()
   const userRoles= useSelector((state) => state.auth.roles)
   const isAdmin= userRoles.includes("ROLE_ADMIN")
@@ -21,7 +22,10 @@ const ProductCard = ({ products }) => {
           toast.error(error.message)
       }
   }
-
+  
+  const handleAddToCart = (productId) => {
+      navigate(`/product/${productId}/details`)
+  }
   return (
     <main className='row m-2 m-2'>
       {products.map((product) => (
@@ -50,7 +54,7 @@ const ProductCard = ({ products }) => {
               <Link onClick={() => handleDeleteProduct(product.id)} >Delete</Link>
               </>
             )}
-                <button className='shop-now-button'>{" "}
+                <button className='shop-now-button' onClick={() => handleAddToCart(product.id)} >{" "}
                   <FaShoppingCart/>
                   Add to cart</button>
               </div>

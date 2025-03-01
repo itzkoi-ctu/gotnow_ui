@@ -12,7 +12,7 @@ import UserRegistration from "./components/user/UserRegistration"
 import Login from "./components/auth/Login"
 import ProtectedRoute from "./components/auth/ProtectedRoute"
 import Unauthorized from "./components/Unauthorized"
-
+import UserProfile from "./components/user/UserProfile"
 function App() {
   const router= createBrowserRouter(
     createRoutesFromElements(
@@ -31,6 +31,8 @@ function App() {
         <Route element={<ProtectedRoute  useOutlet={true} allowedRoles={["ROLE_USER", "ROLE_ADMIN"]} />   }>
         <Route path="user/:userId/my-cart" element={<Cart/>}/>
         <Route path="order/:userId/my-order" element={<Order/>}/>
+        <Route path='/user-profile/:userId/profile' element={<UserProfile/>} />
+
 
         </Route>
 

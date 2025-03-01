@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { addNewProduct } from "../../store/features/productSlice";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { addNewProduct, clearError } from "../../store/features/productSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import BrandSelector from "../common/BrandSelector";
 import CategorySelector from "../common/CategorySelector";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import ImageUploader from "../common/ImageUploader";
-
+import LoadSpinner from "../common/LoadSpinner"
 const AddProduct = () => {
   const dispatch = useDispatch();
   const [showNewBrandInput, setShowNewBrandInput] = useState(false);
@@ -16,7 +16,7 @@ const AddProduct = () => {
   const [activeStep, setActiveStep] = useState(0);
   const steps = ["Add New Product", "Upload Product Image"];
   const [productId, setProductId] = useState(null);
-
+  const {errorMessage, isLoading}= useSelector((state) => state.product)
 
 
   const [product, setProduct] = React.useState({
@@ -64,7 +64,7 @@ const AddProduct = () => {
       resetForm();
       setActiveStep(1);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(errorMessage);
     }
   };
   const handlePreviousStep = () => {
@@ -84,6 +84,13 @@ const AddProduct = () => {
     setShowNewCategoryInput(false);
   };
 
+  useEffect(() => {
+    dispatch(clearError())
+  },[dispatch])
+
+  // if(isLoading){
+  //   return <LoadSpinner/>
+  // }
   return (
     <section className='container mt-5 mb-5'>
       <ToastContainer />

@@ -1,5 +1,8 @@
 import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
-import {api} from "../../components/services/api"
+import {api, privateApi} from "../../components/services/api"
+
+
+    
 export const getAllProducts = createAsyncThunk(
     "product/getAllProducts",
     async () => {
@@ -11,15 +14,20 @@ export const getAllProducts = createAsyncThunk(
 
 export const addNewProduct = createAsyncThunk(
     "product/addNewProduct",
-    async (product) => {
-        const response = await api.post("/products/add", product);
+    async (product, {rejectWithValue}) => {
+        try{
+            const response = await privateApi.post("/products/add", product);
         return response.data.data;
+        }catch(error){
+            console.log("error from add product: "+ error.response?.data)
+            return rejectWithValue(error.response?.data)
+        }
     }
 )
 export const deleteProduct = createAsyncThunk(
     "product/deleteProduct",
     async (productId) => {
-        const response = await api.delete(`/products/product/${productId}/delete`);
+        const response = await privateApi.delete(`/products/product/${productId}/delete`);
         console.log("response delete: "+response.data)
 
         return response.data;
@@ -28,7 +36,7 @@ export const deleteProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
     "products/updateProduct",
     async ({ productId, updatedProduct }) => {
-      const response = await api.put(
+      const response = await privateApi.put(
         `/products/product/${productId}/update`,
         updatedProduct
       );
@@ -101,6 +109,9 @@ const productSlice = createSlice({
         },
         addBrand: (state, action) => {
             state.brands.push(action.payload)
+        },
+        clearError: (state) => {
+            state.errorMessage= null
         }
 
 
@@ -154,6 +165,14 @@ const productSlice = createSlice({
                 state.errorMessage= null;
                 state.isLoading= false;
             })
+            .addCase(addNewProduct.rejected,(state, action) => {
+                state.errorMessage=action.payload
+                state.isLoading=false
+            })
+            .addCase(addNewProduct.pending, (state, action) =>{
+                state.isLoading= true
+                state.errorMessage= null
+            })
             .addCase(updateProduct.fulfilled, (state, action) => {
                 state.product= action.payload.data;
                 state.errorMessage = null;
@@ -171,5 +190,5 @@ const productSlice = createSlice({
     
     
 });
-export const {filterByBrands, setQuantity, addBrand}= productSlice.actions
+export const {filterByBrands, setQuantity, addBrand, clearError}= productSlice.actions
 export default productSlice.reducer;
