@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { logoutUser } from '../services/authService'
- const BASE_URL= "http://localhost:8080/api/v1"
-//const BASE_URL= "https://gotnow-api.onrender.com/api/v1"
+ const localHost= "http://localhost:8080/api/v1"
+const BASE_URL= "https://gotnow-api.onrender.com/api/v1"
 
 export  const  privateApi= axios.create({
     baseURL: BASE_URL,
