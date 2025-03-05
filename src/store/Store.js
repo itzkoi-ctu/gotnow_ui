@@ -9,7 +9,7 @@ import imageReducer from "./features/imageSlice"
 import userReducer from "./features/userSlice"
 import authReducer from "./features/authSlice"
 import ratingReducer from "./features/ratingSlice"
-export const store= configureStore({
+export const Store= configureStore({
     reducer: {
         search: searchReducer,
         category: categoryReducer,
