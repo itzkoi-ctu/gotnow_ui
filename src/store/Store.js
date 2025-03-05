@@ -9,7 +9,6 @@ import imageReducer from "./features/imageSlice"
 import userReducer from "./features/userSlice"
 import authReducer from "./features/authSlice"
 import ratingReducer from "./features/ratingSlice"
-import chatReducer from "./features/chatSlice"
 export const store= configureStore({
     reducer: {
         search: searchReducer,
@@ -22,6 +21,5 @@ export const store= configureStore({
         user: userReducer,
         auth: authReducer,
         rating: ratingReducer,
-        chat: chatReducer,
     }
 })
