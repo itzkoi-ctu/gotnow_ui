@@ -83,6 +83,23 @@ export const deleteAddress = createAsyncThunk(
     return response.data;
   }
 );
+
+
+export const uploadAvatar = createAsyncThunk(
+  "user/uploadAvatar",
+  async ({ userId, file }, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await api.post(`/users/${userId}/upload-avatar`, formData);
+
+      return response.data.avatarUrl; // Trả về avatarUrl mới từ backend
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Upload failed");
+    }
+  }
+);
   
 const initialState= {
     user: null,
@@ -119,6 +136,11 @@ const userSlice= createSlice({
         .addCase(registerUser.rejected, (state, action) => {
           state.errorMessage = action.error.message;
           state.loading = false;
+        })
+        .addCase(uploadAvatar.fulfilled, (state, action) => {
+          if (state.userInfo) {
+            state.userInfo.avatarUrl = action.payload;
+          }
         })
 
     }

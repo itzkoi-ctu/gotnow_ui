@@ -4,13 +4,13 @@ import { logoutUser } from '../services/authService'
 const BASE_URL= "https://gotnow-api.onrender.com/api/v1"
 
 export  const  privateApi= axios.create({
-    baseURL: BASE_URL,
+    baseURL: localHost,
     withCredentials: true,
  })
 
 
  export  const  api= axios.create({
-    baseURL: BASE_URL,
+    baseURL: localHost,
     withCredentials: true,
     
  })

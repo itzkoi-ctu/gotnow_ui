@@ -10,9 +10,10 @@ import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setTotalItems } from '../../store/features/paginationSlice'
 import StockStatus from '../utils/StockStatus'
+import LoadSpinner from "../common/LoadSpinner"
 export const Home = () => {
     const dispatch = useDispatch();
-
+  const isLoading= useSelector((state) => state.product.isLoading)
 
   const [filteredProducts, setFilteredProducts] = useState([])  
 
@@ -50,14 +51,22 @@ export const Home = () => {
     indexOfLastProduct
   );
 
-
+if(isLoading){
+  return(
+    <div className="d-flex justify-content-center">
+    <LoadSpinner/>
+  </div>
+  )
+  
+}
   
   return (
 
     <>
+    
       <Hero/>
     <div className='d-flex flex-wrap justify-content-center p-5'>
-   
+      
       <ToastContainer/>
       {currentProducts
       &&currentProducts.map((product, index)=>{
@@ -70,7 +79,7 @@ export const Home = () => {
               )}
             </div>
          </Link>
-        <Card.Body className='product-description'>
+        <Card.Body className='product-description-home'>
           <p>{product.name} - {product.brand}</p> 
           {/* {product.description} */}
           <h4 className='price'>${product.price}</h4>
@@ -84,8 +93,11 @@ export const Home = () => {
           {" "}
           Shop now 
           </Link>
+          
         </Card.Body>
+        
       </Card>)
+      
       
       })}
       

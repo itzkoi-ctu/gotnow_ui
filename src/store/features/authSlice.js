@@ -4,9 +4,15 @@ import { jwtDecode } from "jwt-decode";
 
 export const login = createAsyncThunk(
   "auth/login",
-  async ({ email, password }) => {
+  async ({ email, password }, { rejectWithValue }) => {
+    try{
     const response = await api.post("/auth/login", { email, password });
     return response.data;
+  }catch(error){
+    //console.log("error from login: "+ error.response?.data)
+    
+    return rejectWithValue(error.response?.data)
+  }
   }
 );
 
@@ -46,7 +52,8 @@ const authSlice = createSlice({
         localStorage.setItem("userId", decodedToken.id);
       })
       .addCase(login.rejected, (state, action) => {
-        state.errorMessage = action.error.message;
+        state.errorMessage = action.payload;
+        console.log("action.payload: "+action.payload)
       });
   },
 });

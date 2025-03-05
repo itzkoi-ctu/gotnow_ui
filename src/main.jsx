@@ -5,7 +5,7 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { Provider } from "react-redux";
-import { store } from "./store/Store.js";
+import { store } from "./store/store.js";
 import  {Elements} from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -18,6 +18,7 @@ createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <Elements stripe={stripePromise} options={options}>
         <App/>
+       
       </Elements>
     </Provider>
   </StrictMode>

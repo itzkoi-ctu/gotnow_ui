@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react'
         try{
             
             const response = await fetch(
-                BASE_Url+`/api/v1/images/image/download/${id}`
+                localHost+`/api/v1/images/image/download/${id}`
             )
             console.log("image"+response)
             const blob = await response.blob()
@@ -40,7 +40,12 @@ import React, { useEffect, useState } from 'react'
   return (
     
     <div>
-        <img src={productImage} alt='Product Image'/>
+        <img src={productImage} alt='Product Image' style={{
+            width: "150px",
+            height: "180px",
+            objectFit: "cover",
+            borderRadius: "5px",
+        }}/>
     </div>
 
 

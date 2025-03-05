@@ -30,41 +30,33 @@ const ProductCard = ({ products }) => {
     <main className='row m-2 m-2'>
       {products.map((product) => (
         <div className='col-12 col-sm-6 col-md-4 col-lg-2' key={product.id}>
-          <Card className='mb-2 mt-2'>
-            <Link to={`/product/${product.id}/details`} className='link'>
-              <div className='image-container'>
-                {product.images.length > 0 && (
-                  <ProductImage productId={product.images[0].id} />
-                )}
-              </div>
-            </Link>
-            <Card.Body>
-              <p className='product-description'>
-                {product.name} - {product.brand}
-              </p>
-              {/* - {product.description} */}
-              <h4 className='price'>${product.price}</h4>
-              <p>
-              <StockStatus inventory={product.inventory}/>
-            </p>
-              
-              <div className='d-flex gap-2'>
-              {isAdmin&&(
-                <>
-              <Link to={`/update-product/${product.id}/update`}>Edit</Link>
-              <Link onClick={() => handleDeleteProduct(product.id)} >Delete</Link>
-              </>
-            )}
-                <button className='shop-now-button' onClick={() => handleAddToCart(product.id)} >{" "}
-                  <FaShoppingCart/>
-                  Add to cart</button>
-              </div>
-
-
-              
-
-            </Card.Body>
-          </Card>
+          <Card className="product-card-in-all">
+  <Link to={`/product/${product.id}/details`} className="product-link">
+    <div className="image-container">
+      {product.images.length > 0 && (
+        <ProductImage productId={product.images[0].id} />
+      )}
+    </div>
+  </Link>
+  <Card.Body className="product-body-in-all">
+    <p className="product-description-in-all">{product.name} - {product.brand}</p>
+    <h4 className="price-in-all">${product.price}</h4>
+    <p>
+      <StockStatus inventory={product.inventory}/>
+    </p>
+    <div className="product-actions-in-all">
+      {isAdmin && (
+        <>
+          <Link to={`/update-product/${product.id}/update`} className="edit-btn">Edit</Link>
+          <Link onClick={() => handleDeleteProduct(product.id)} className="delete-btn">Delete</Link>
+        </>
+      )}
+      <button className="shop-now-button" onClick={() => handleAddToCart(product.id)}>
+        <FaShoppingCart/> Add to cart
+      </button>
+    </div>
+  </Card.Body>
+</Card>
         </div>
       ))}
     </main>

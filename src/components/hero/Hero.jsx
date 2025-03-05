@@ -20,7 +20,7 @@ import { SearchBar } from '../search/SearchBar'
             <div>
                 <div className='home-button-container'></div>
 
-                <a href='#' className='home-shop-button link'>
+                <a href='/products' className='home-shop-button link'>
                     Shop Now
                 </a>
                     <button className='deals-button'>Today's Deal</button>

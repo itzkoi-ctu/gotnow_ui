@@ -2,6 +2,7 @@ import React ,{useEffect, useState}from 'react'
 import { toast, ToastContainer } from "react-toastify";
 import { nanoid } from "nanoid";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa"; // Import icon camera
 
 import { Container, Row, Col, Card, ListGroup, Table } from "react-bootstrap";
 import AddressForm from '../common/AddressForm';
@@ -17,6 +18,8 @@ import{
 
 }from '../../store/features/userSlice'
 import LoadSpinner from '../common/LoadSpinner';
+import { uploadAvatar } from '../../store/features/userSlice';
+import avt from "../../assets/images/defaultavatar.png"
 const UserProfile = () => {
     const dispatch = useDispatch();
   const { userId } = useParams();
@@ -26,6 +29,9 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+
+  const [preview, setPreview] = useState(user?.avatarUrl || "/default-avatar.png");
+
 
 
   const [newAddress, setNewAddress] = useState({
@@ -138,6 +144,27 @@ const UserProfile = () => {
     dispatch(getOrderByUserId(userId));
   }, [dispatch, userId]);
 
+
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files[0];
+    
+
+    try {
+      // Gửi ảnh lên server
+      const response = await dispatch(uploadAvatar({ userId, file })).unwrap();
+      toast.success("Avatar updated successfully!");
+
+      // Cập nhật Redux store
+      dispatch(getUserById(userId));
+
+      // Hiển thị ảnh mới ngay lập tức
+      setPreview(response.avatarUrl);
+    } catch (error) {
+      toast.error("Error update avatar");
+      console.error(error);
+    }
+  };
+
   if(loading){
     return (
       <div>
@@ -157,15 +184,29 @@ const UserProfile = () => {
               <Card>
                 <Card.Header>Personal User Information</Card.Header>
                 <Card.Body className='text-center'>
-                  <div className='mb-3'>
-                    <img
-                      src={user.photo || "User photo"}
-                      alt='User Photo'
-                      style={{ width: "100px", height: "100px" }}
-                      className='image-fluid rounded-circle'
-                    />
-                  </div>
-
+                <div style={{ textAlign: "center" }}>
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <img
+          src={user.avatarUrl || avt} // Hiển thị avatar hoặc ảnh mặc định
+          alt="Avatar"
+          style={{ width: 150, height: 150, borderRadius: "50%", objectFit: "cover", border: "2px solid #ddd" }}
+        />
+        <label htmlFor="avatarInput" style={{ 
+          position: "absolute", bottom: 10, right: 10, 
+          background: "rgba(0, 0, 0, 0.5)", padding: 8, borderRadius: "50%", cursor: "pointer"
+        }}>
+          <FaCamera color="white" size={16} />
+        </label>
+      </div>
+      
+      <input
+        id="avatarInput"
+        type="file"
+        style={{ display: "none" }}
+        accept="image/*"
+        onChange={handleAvatarChange}
+      />
+    </div>
                   <Card.Text>
                     {" "}
                     <strong> Full Name :</strong> {user.firstName}{" "}
@@ -336,6 +377,7 @@ const UserProfile = () => {
       ) : (
         <p>Loading user information....</p>
       )}
+      
     </Container>
   )
 }

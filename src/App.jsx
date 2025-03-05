@@ -16,6 +16,7 @@ import UserProfile from "./components/user/UserProfile"
 import Checkout from "./components/checkout/Checkout"
 import ManageOrder from "./components/order/ManageOrder"
 import Revenue from "./components/order/Revenue"
+import OrderDetail from "./components/order/OrderDetail"
 function App() {
   const router= createBrowserRouter(
     createRoutesFromElements(
@@ -29,7 +30,7 @@ function App() {
         <Route path="/login" element={<Login/>}/>
         <Route path="/checkout/:userId/checkout" element={<Checkout/>}/>
         <Route path="/unauthorized" element={<Unauthorized/>}/>
-
+        <Route path="/order-detail/:orderId/order" element={<OrderDetail/>}/>
 
 
         

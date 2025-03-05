@@ -16,7 +16,8 @@ const Login = () => {
       const dispatch = useDispatch();
       const [errorMessage, setErrorMessage] = useState(null);
 
-    const authErrorMessage = useSelector((state) => state.auth.errorMessage);
+    const authErrorMessage = useSelector((state) => state.auth?.errorMessage);
+    console.log("authErrorMessage: "+authErrorMessage)
       const isAuthenticated= useSelector((state) => state.auth.isAuthenticated)
       const from = location.state?.from?.pathname || "/"
       

@@ -61,6 +61,17 @@ export const getAllOrders = createAsyncThunk(
       
   }
 )
+export const getOrderById = createAsyncThunk(
+  "order/getOrderById", async(orderId) => {
+    
+          const response = await api.get(`/orders/order/${orderId}/detail`)
+          console.log("The response from order slice: "+ JSON.stringify(response.data))
+          console.log("The response from order slice:2 "+ response.data.data)
+
+          return response.data.data
+      
+  }
+)
 
 
 
@@ -69,7 +80,8 @@ const initialState= {
     ordersAdmin: [],
     loading: false,
     errorMessage: null,
-    successMessage: null
+    successMessage: null,
+    orderDetail: null
 }
 
 const orderSlice = createSlice({
@@ -98,6 +110,16 @@ const orderSlice = createSlice({
             state.ordersAdmin = action.payload;
             state.loading = false;
           })
+          .addCase(getOrderById.fulfilled, (state,action)=> {
+            state.orderDetail= action.payload
+            state.loading = false;
+
+          })
+          .addCase(getOrderById.pending, (state,action)=> {
+            state.loading = true;
+
+          })
+          
         
     }
 })

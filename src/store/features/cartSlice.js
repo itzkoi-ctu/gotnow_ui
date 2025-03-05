@@ -26,6 +26,15 @@ export const getUserCart = createAsyncThunk(
     }
 )
 
+export const clearCartApi = createAsyncThunk(
+    "cart/clearCart", 
+    async (cartId) => {
+          await api.delete(`/carts/cart/${cartId}/clear`);
+       
+        return response.data;
+    }
+)
+
 
 
 export const removeItemFromCart = createAsyncThunk(
@@ -47,6 +56,9 @@ export const updateQuantity = createAsyncThunk(
         return {itemId, newQuantity};
     }
 )
+
+
+
 
 const initialState= {
     items:  [],

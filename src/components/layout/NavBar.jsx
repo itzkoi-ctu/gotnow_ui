@@ -89,9 +89,9 @@ const NavBar = () => {
               <Link to={`/user/${userId}/my-cart`} className="nav-cart">
                 <FaShoppingCart className="cart-icon" />
                 {cart.items.length > 0 ? (
-                  <div className="badge">{cart.items.length}</div>
+                  <div className="badge2">{cart.items.length}</div>
                 ) : (
-                  <div className="badge">0</div>
+                  <div className="badge2">0</div>
                 )}
               </Link>
             )}
