@@ -13,7 +13,7 @@ const ImageZoomify = ({productId}) => {
             try{
                 
                 const response = await fetch(
-                    localHost+`/api/v1/images/image/download/${id}`
+                    BASE_Url+`/api/v1/images/image/download/${id}`
                 )
                 console.log("image"+response)
                 const blob = await response.blob()
