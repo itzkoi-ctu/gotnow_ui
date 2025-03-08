@@ -10,6 +10,7 @@ import {setInitialSearchQuery} from "../../store/features/searchSlice";
 import { useLocation, useParams } from 'react-router-dom';
 import LoadSpinner from '../common/LoadSpinner';
 import { ToastContainer } from 'react-toastify';
+import Chat from '../chat/ChatUser';
 const Product = () => {
     const dispatch = useDispatch();
     const {products, selectedBrands} = useSelector((state) => state.product)
@@ -106,7 +107,6 @@ useEffect(() => {
             
         </section>
         
-       
 
     </div>
     <Paginator/>

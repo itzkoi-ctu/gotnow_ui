@@ -39,6 +39,8 @@ const OrderAdminDetail = ({ orderId, show, onHide }) => {
 
             <p><strong>Total Amount:</strong> ${orderDetails.totalAmount}</p>
             <p><strong>Status:</strong> {orderDetails.orderStatus}</p>
+            <p><strong>Delivered day:</strong> {orderDetails.deliveredDay}</p>
+
             <h5>Items:</h5>
             <ul className="list-unstyled">
               {orderDetails.items.map((item) => (
