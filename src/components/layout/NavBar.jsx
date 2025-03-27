@@ -35,6 +35,7 @@ const NavBar = () => {
             <Nav.Link to="/products" as={Link} className="nav-item">
               All Products
             </Nav.Link>
+            
 
             {userRoles.includes("ROLE_ADMIN") && (
               <>
@@ -47,6 +48,10 @@ const NavBar = () => {
                 <Nav.Link to="/manage-orders" as={Link} className="nav-item">
                   Manage Orders
                 </Nav.Link>
+                <Nav.Link to="/admin-chat" as={Link} className="nav-item">
+                  Chat List
+                </Nav.Link>
+                
               </>
             )}
           </Nav>

@@ -39,6 +39,17 @@ const OrderAdminDetail = ({ orderId, show, onHide }) => {
 
             <p><strong>Total Amount:</strong> ${orderDetails.totalAmount}</p>
             <p><strong>Status:</strong> {orderDetails.orderStatus}</p>
+            <p><strong>Delivered day:</strong> {orderDetails.deliveredDay}</p>
+            <p><strong>Address:</strong> {orderDetails.addressResponse.addressType},{" "}
+              {orderDetails.addressResponse.street}, {" "}
+               {orderDetails.addressResponse.city},{" "}
+               {orderDetails.addressResponse.state}, {" "}
+               {orderDetails.addressResponse.country}
+               </p>
+               <p><strong>Number phone:</strong> {orderDetails.addressResponse.mobileNumber}</p>
+
+
+
             <h5>Items:</h5>
             <ul className="list-unstyled">
               {orderDetails.items.map((item) => (

@@ -17,6 +17,8 @@ import Checkout from "./components/checkout/Checkout"
 import ManageOrder from "./components/order/ManageOrder"
 import Revenue from "./components/order/Revenue"
 import OrderDetail from "./components/order/OrderDetail"
+import Chat from "./components/chat/ChatUser"
+import AdminChat from "./components/chat/AdminChatHistory"
 function App() {
   const router= createBrowserRouter(
     createRoutesFromElements(
@@ -35,9 +37,10 @@ function App() {
 
         
         <Route element={<ProtectedRoute  useOutlet={true} allowedRoles={["ROLE_USER", "ROLE_ADMIN"]} />   }>
-        <Route path="user/:userId/my-cart" element={<Cart/>}/>
-        <Route path="order/:userId/my-order" element={<Order/>}/>
+        <Route path="/user/:userId/my-cart" element={<Cart/>}/>
+        <Route path="/order/:userId/my-order" element={<Order/>}/>
         <Route path='/user-profile/:userId/profile' element={<UserProfile/>} />
+
 
 
         </Route>
@@ -49,6 +52,8 @@ function App() {
 
         <Route path="/add-product" element={<AddProduct/>}/>
         <Route path="/update-product/:productId/update" element={<ProductUpdate/>}/>
+        <Route path="/admin-chat" element={<AdminChat/>}/>
+
         </Route>
 
         
