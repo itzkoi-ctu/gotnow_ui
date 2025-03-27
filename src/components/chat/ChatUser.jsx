@@ -14,13 +14,16 @@ const ChatUser = () => {
     const adminId = 1;
 
     const dispatch = useDispatch();
-    const { messages, loading, error } = useSelector((state) => state?.chat);
+    // const { messages, loading, error } = useSelector((state) => state?.chat);
+    const chatState = useSelector((state) => state.chat || {});
+const { messages = [], loading, error } = chatState;
+
     
     useEffect(() => {
         // 🔹 Gọi Redux action để fetch lịch sử tin nhắn
         dispatch(fetchChatHistory( {adminId, userId} ));
 
-        const socket = new SockJS("http://localhost:8080/ws");
+        const socket = new SockJS("https://gotnow-api.onrender.com/ws");
         const client = new Client({
             webSocketFactory: () => socket,
             reconnectDelay: 5000,
