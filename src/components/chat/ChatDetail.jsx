@@ -8,7 +8,7 @@ import "./ChatDetail.css";
 import newMessageSound from "../../assets/sound/happy-pop-2-185287.mp3";
 const ChatDetail = ({ userId,username, onClose }) => {
     const dispatch = useDispatch();
-    const { messages } = useSelector((state) => state.chat);
+    const { messages } = useSelector((state) => state?.chat);
     const [inputMessage, setInputMessage] = useState("");
     const [stompClient, setStompClient] = useState(null);
     const messagesEndRef = useRef(null);

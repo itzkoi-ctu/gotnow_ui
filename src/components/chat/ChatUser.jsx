@@ -14,7 +14,7 @@ const ChatUser = () => {
     const adminId = 1;
 
     const dispatch = useDispatch();
-    const { messages, loading, error } = useSelector((state) => state.chat);
+    const { messages, loading, error } = useSelector((state) => state?.chat);
     
     useEffect(() => {
         // 🔹 Gọi Redux action để fetch lịch sử tin nhắn
