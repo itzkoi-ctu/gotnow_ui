@@ -3,6 +3,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchChatHistory, addMessage } from "../../store/features/chatSlice";
+
 const ChatUser = () => {
     const [inputMessage, setInputMessage] = useState("");
     const [stompClient, setStompClient] = useState(null);
@@ -14,7 +15,7 @@ const ChatUser = () => {
 
     const dispatch = useDispatch();
     const { messages, loading, error } = useSelector((state) => state.chat);
-
+    
     useEffect(() => {
         // 🔹 Gọi Redux action để fetch lịch sử tin nhắn
         dispatch(fetchChatHistory( {adminId, userId} ));
@@ -29,6 +30,7 @@ const ChatUser = () => {
                 client.subscribe(`/topic/user/${userId}`, (message) => {
                     const receivedMessage = JSON.parse(message.body);
                     dispatch(addMessage(receivedMessage));
+                    
                 });
             },
         });

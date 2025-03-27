@@ -1,99 +1,22 @@
 .chat-container {
+    height: 85vh;
     display: flex;
-    height: 100vh;
-    background-color: #18191a;
-    color: #fff;
-    font-family: Arial, sans-serif;
 }
 
-.user-list {
-    width: 30%;
-    background-color: #242526;
-    padding: 20px;
-    border-right: 1px solid #3a3b3c;
+.chat-sidebar {
+    height: 100%;
     overflow-y: auto;
 }
 
-.user-list h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-}
-
-.search-bar {
-    margin-bottom: 20px;
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 20px;
-    border: none;
-    background-color: #3a3b3c;
-    color: #fff;
-    outline: none;
-}
-
-.search-bar input::placeholder {
-    color: #b0b3b8;
-}
-
-.user-list ul {
-    list-style: none;
-    padding: 0;
-}
-
-.user-list li {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.user-list li:hover {
-    background-color: #3a3b3c;
-}
-
-.user-list li.active {
-    background-color: #3a3b3c;
-}
-
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.user-info {
-    flex: 1;
-}
-
-.user-info strong {
-    font-size: 1rem;
-}
-
-.user-info span {
-    display: block;
-    font-size: 0.9rem;
-    color: #b0b3b8;
-}
-
-.user-list .error {
-    color: #ff4d4f;
-    font-size: 0.9rem;
-}
-
-.chat-detail-container {
-    width: 70%;
-    background-color: #18191a;
-}
-
-.chat-placeholder {
-    width: 70%;
+.chat-content {
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #b0b3b8;
+}
+
+.chat-sidebar .active {
+    background-color: #007bff !important;
+    color: white !important;
+    border-radius: 5px;
 }

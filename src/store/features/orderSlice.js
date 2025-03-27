@@ -1,5 +1,6 @@
 import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
 import {api} from "../../components/services/api"
+import { saveAs } from "file-saver";
 
 
 
@@ -16,9 +17,9 @@ export const createPaymentIntent = createAsyncThunk(
 );
 
 export const placeOrder = createAsyncThunk(
-    "order/placeOrder", async({userId}) => {
+    "order/placeOrder", async({userId, address}) => {
         
-            const response = await api.post(`/orders/user/${userId}/place-order`)
+            const response = await api.post(`/orders/user/${userId}/place-order`, address)
             // console.dir("The response from order slice: "+JSON.stringify(response.data))
             // console.dir("The response from order slice:2 "+ response.data.data)
 
@@ -75,13 +76,33 @@ export const getOrderById = createAsyncThunk(
 
 
 
+export const downloadOrders = createAsyncThunk(
+  "order/downloadOrders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/orders/export", {
+        responseType: "blob", // Để nhận về file dạng nhị phân
+      });
+      const blob = new Blob([response.data], { type: "application/vnd.ms-excel" });
+      saveAs(blob, "orders.xlsx");
+      return "success";
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
 const initialState= {
     orders: [],
     ordersAdmin: [],
     loading: false,
     errorMessage: null,
     successMessage: null,
-    orderDetail: null
+    orderDetail: null,
+    downloadStatus: "idle", // Trạng thái tải
+    error: null,
+
 }
 
 const orderSlice = createSlice({
@@ -119,6 +140,16 @@ const orderSlice = createSlice({
             state.loading = true;
 
           })
+          .addCase(downloadOrders.pending, (state) => {
+            state.downloadStatus = "loading";
+          })
+          .addCase(downloadOrders.fulfilled, (state) => {
+            state.downloadStatus = "success";
+          })
+          .addCase(downloadOrders.rejected, (state, action) => {
+            state.downloadStatus = "failed";
+            state.error = action.payload;
+          });
           
         
     }

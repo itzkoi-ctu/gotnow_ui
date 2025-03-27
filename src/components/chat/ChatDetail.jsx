@@ -3,16 +3,21 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchChatHistory, addMessage } from "../../store/features/chatSlice";
-import { Button, Form, Card, Container } from "react-bootstrap";
-import "./ChatDetail.css"; // Giữ file CSS để tùy chỉnh thêm
-
-const ChatDetail = ({ userId, onClose }) => {
+import { Button, Form, Card } from "react-bootstrap";
+import "./ChatDetail.css";
+import newMessageSound from "../../assets/sound/happy-pop-2-185287.mp3";
+const ChatDetail = ({ userId,username, onClose }) => {
     const dispatch = useDispatch();
     const { messages } = useSelector((state) => state.chat);
     const [inputMessage, setInputMessage] = useState("");
     const [stompClient, setStompClient] = useState(null);
     const messagesEndRef = useRef(null);
+    const chatContainerRef = useRef(null); // Tham chiếu đến khung chat
     const adminId = 1;
+    const playNotificationSound = () => {
+        const audio = new Audio(newMessageSound);
+        audio.play();
+    };
 
     useEffect(() => {
         if (!userId) return;
@@ -27,9 +32,12 @@ const ChatDetail = ({ userId, onClose }) => {
             onConnect: () => {
                 console.log("✅ Admin đã kết nối WebSocket!");
                 client.subscribe(`/topic/admin/${userId}`, (message) => {
-                    dispatch(addMessage(JSON.parse(message.body)));
+                    const newMessage = JSON.parse(message.body);
+                    dispatch(addMessage(newMessage));
+                    if (newMessage.senderId !== adminId) {
+                        playNotificationSound();
+                    }
                 });
-                
             },
         });
 
@@ -41,8 +49,11 @@ const ChatDetail = ({ userId, onClose }) => {
         };
     }, [userId, dispatch]);
 
+    // ✅ Tự động cuộn khi có tin nhắn mới
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
     }, [messages]);
 
     const sendMessage = () => {
@@ -58,55 +69,58 @@ const ChatDetail = ({ userId, onClose }) => {
             timestamp: new Date().toISOString(),
         };
 
+        dispatch(addMessage(chatMessage));
+
         stompClient.publish({
             destination: "/app/chat",
             body: JSON.stringify(chatMessage),
         });
 
-        dispatch(addMessage(chatMessage));
         setInputMessage("");
     };
 
     return (
-        <Container className="chat-popup position-fixed" style={{ bottom: "20px", right: "20px", width: "400px", zIndex: 1000 }}>
-            <Card className="shadow-lg border-0">
-                <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">Chat với User {userId}</h5>
-                    <Button variant="link" className="text-white p-0" onClick={onClose}>
-                        ×
+        <Card className="chat-detail-card shadow-sm">
+            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 className="mb-0">{username}</h5>
+                <Button variant="link" className="text-white p-0" onClick={onClose}>
+                    ×
+                </Button>
+            </Card.Header>
+            <Card.Body className="chat-messages p-3" ref={chatContainerRef}>
+                {messages?.map((msg, index) => (
+                    <div
+                        key={index}
+                        className={`chat-bubble mb-2 p-2 rounded ${
+                            msg.senderId === parseInt(userId) ? "bg-light text-dark" : "bg-primary text-white ms-auto"
+                        }`}
+                        style={{ maxWidth: "75%", wordWrap: "break-word" }}
+                    >
+                        {msg.content}
+                    </div>
+                ))}
+            </Card.Body>
+            <Card.Footer className="p-2">
+                <Form className="d-flex">
+                    <Form.Control
+                        type="text"
+                        value={inputMessage}
+                        onChange={(e) => setInputMessage(e.target.value)}
+                        placeholder="Nhập tin nhắn..."
+                        className="me-2"
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault(); // ✅ Ngăn form reload trang
+                                sendMessage();
+                            }
+                        }}
+                    />
+                    <Button variant="primary" onClick={sendMessage}>
+                        Gửi
                     </Button>
-                </Card.Header>
-                <Card.Body className="chat-messages p-3" style={{ maxHeight: "400px", overflowY: "auto" }}>
-                    {messages?.map((msg, index) => (
-                        <div
-                            key={index}
-                            className={`chat-bubble mb-2 p-2 rounded ${
-                                msg.senderId === parseInt(userId) ? "bg-light text-dark" : "bg-primary text-white ms-auto"
-                            }`}
-                            style={{ maxWidth: "75%", wordWrap: "break-word" }}
-                        >
-                            {msg.content}
-                        </div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                </Card.Body>
-                <Card.Footer className="p-2">
-                    <Form className="d-flex">
-                        <Form.Control
-                            type="text"
-                            value={inputMessage}
-                            onChange={(e) => setInputMessage(e.target.value)}
-                            placeholder="Nhập tin nhắn..."
-                            className="me-2"
-                            onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-                        />
-                        <Button variant="primary" onClick={sendMessage}>
-                            Gửi
-                        </Button>
-                    </Form>
-                </Card.Footer>
-            </Card>
-        </Container>
+                </Form>
+            </Card.Footer>
+        </Card>
     );
 };
 
