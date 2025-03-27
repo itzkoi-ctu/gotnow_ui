@@ -7,7 +7,7 @@ import "./AdminChatHistory.css";
 import moment from "moment-timezone";
 const AdminChatHistory = () => {
     const dispatch = useDispatch();
-    const conversations = useSelector((state) => state.chat.conversations);
+    const conversations = useSelector((state) => state?.chat?.conversations);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
