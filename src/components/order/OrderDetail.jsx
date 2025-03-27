@@ -29,6 +29,8 @@ const OrderDetail = () => {
                     <Card.Title className="text-dark">🛒 Order ID: <strong>{order.id}</strong></Card.Title>
                     <p><strong>📅 Date:</strong> {order.orderDate}</p>
                     <p><strong>📦 Status:</strong> <span className="text-success">{order.orderStatus}</span></p>
+                    <p><strong>📅 Delivered day:</strong> {order.deliveredDay}</p>
+
                     <p><strong>💰 Total Amount:</strong> <span className="text-danger">${order.totalAmount.toFixed(2)}</span></p>
                 </Card.Body>
             </Card>
@@ -56,6 +58,7 @@ const OrderDetail = () => {
                                 <Card.Title className="fw-bold">{item.productName}</Card.Title>
                                 <p><strong>🏷 Brand:</strong> {item.productBrand}</p>
                                 <p><strong>🔢 Quantity:</strong> {item.quantity}</p>
+
                                 <p><strong>💲 Price:</strong> <span className="text-danger">${item.price.toFixed(2)}</span></p>
                                 <WriteReviewButton orderId={order.id} productId={item.productId} />
                                 </div>
