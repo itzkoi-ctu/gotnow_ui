@@ -1,5 +1,5 @@
 import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
-import {api} from "../../components/services/api"
+import {api, privateApi} from "../../components/services/api"
 import { saveAs } from "file-saver";
 
 
@@ -8,7 +8,7 @@ export const createPaymentIntent = createAsyncThunk(
   "payments/createPaymentIntent",
   async ({ amount, currency }) => {
     // console.log("createPaymentIntent from the slice :", {amount, currency})
-    const response = await api.post("/orders/create-payment-intent", {
+    const response = await privateApi.post("/orders/create-payment-intent", {
       amount,
       currency,
     });
@@ -19,9 +19,8 @@ export const createPaymentIntent = createAsyncThunk(
 export const placeOrder = createAsyncThunk(
     "order/placeOrder", async({userId, address}) => {
         
-            const response = await api.post(`/orders/user/${userId}/place-order`, address)
-            // console.dir("The response from order slice: "+JSON.stringify(response.data))
-            // console.dir("The response from order slice:2 "+ response.data.data)
+            const response = await privateApi.post(`/orders/user/${userId}/place-order`, address)
+            
 
             return response.data
         
@@ -31,7 +30,7 @@ export const placeOrder = createAsyncThunk(
 export const getOrderByUserId = createAsyncThunk(
     "order/getOrderByUserId", async(userId) => {
         
-            const response = await api.get(`/orders/user/${userId}/order`)
+            const response = await privateApi.get(`/orders/user/${userId}/order`)
             // console.dir("The response from order slice: "+JSON.stringify(response.data))
             // console.dir("The response from order slice:2 "+ response.data.data)
 
@@ -42,7 +41,7 @@ export const getOrderByUserId = createAsyncThunk(
 export const updateOrderStatus = createAsyncThunk(
   "order/confirmReceived", async({orderId,status}) => {
     console.log("orderId: "+orderId)
-          const response = await api.put(`/orders/update/${orderId}/order?orderStatus=${status}`)
+          const response = await privateApi.put(`/orders/update/${orderId}/order?orderStatus=${status}`)
           // console.log("The response from order slice: "+ response.data)
           // console.log("The response from order slice:2 "+ response.data.data)
 
@@ -54,7 +53,7 @@ export const updateOrderStatus = createAsyncThunk(
 export const getAllOrders = createAsyncThunk(
   "order/getAllOrders", async() => {
     
-          const response = await api.get("/orders/all/order")
+          const response = await privateApi.get("/orders/all/order")
           console.log("The response from order slice: "+ JSON.stringify(response.data))
           console.log("The response from order slice:2 "+ response.data.data)
 
@@ -65,7 +64,7 @@ export const getAllOrders = createAsyncThunk(
 export const getOrderById = createAsyncThunk(
   "order/getOrderById", async(orderId) => {
     
-          const response = await api.get(`/orders/order/${orderId}/detail`)
+          const response = await privateApi.get(`/orders/order/${orderId}/detail`)
           console.log("The response from order slice: "+ JSON.stringify(response.data))
           console.log("The response from order slice:2 "+ response.data.data)
 
@@ -80,7 +79,7 @@ export const downloadOrders = createAsyncThunk(
   "order/downloadOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/orders/export", {
+      const response = await privateApi.get("/orders/export", {
         responseType: "blob", // Để nhận về file dạng nhị phân
       });
       const blob = new Blob([response.data], { type: "application/vnd.ms-excel" });

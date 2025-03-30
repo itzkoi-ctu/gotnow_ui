@@ -3,6 +3,8 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchChatHistory, addMessage } from "../../store/features/chatSlice";
+import newMessageSound from "../../assets/sound/happy-pop-2-185287.mp3";
+import { toast } from "react-toastify";
 
 const ChatUser = () => {
     const [inputMessage, setInputMessage] = useState("");
@@ -16,6 +18,12 @@ const ChatUser = () => {
     const dispatch = useDispatch();
     const { messages, loading, error } = useSelector((state) => state.chat);
     
+    const playNotificationSound = () => {
+            const audio = new Audio(newMessageSound);
+            audio.play();
+        };
+    
+
     useEffect(() => {
         // 🔹 Gọi Redux action để fetch lịch sử tin nhắn
         dispatch(fetchChatHistory( {adminId, userId} ));
@@ -30,6 +38,7 @@ const ChatUser = () => {
                 client.subscribe(`/topic/user/${userId}`, (message) => {
                     const receivedMessage = JSON.parse(message.body);
                     dispatch(addMessage(receivedMessage));
+                        playNotificationSound();
                     
                 });
             },
@@ -52,7 +61,10 @@ const ChatUser = () => {
             console.error("❌ STOMP client is not connected!");
             return;
         }
-
+        if(!inputMessage.trim()) {
+            toast.error("❌ Tin nhắn không được để trống!");
+            return;
+        }
         const chatMessage = {
             senderId: parseInt(userId),
             receiverId: adminId,
@@ -69,6 +81,7 @@ const ChatUser = () => {
 
         setInputMessage("");
     };
+    
 
     return (
         <div>
@@ -141,10 +154,15 @@ const ChatUser = () => {
                             overflowY: "auto",
                             display: "flex",
                             flexDirection: "column",
-                        }}
+                        }}  
                     >
                         {loading && <p>Đang tải tin nhắn...</p>}
-                        {error && <p style={{ color: "red" }}>{error}</p>}
+                        {(!messages || messages.length === 0) && !loading && (
+                    <p style={{ textAlign: "center", color: "#888", justifyContent: "center" }}>Chưa có tin nhắn nào</p>
+    )}
+
+   
+                        
                         {messages?.map((msg, index) => (
                             <div
                                 key={index}
@@ -181,7 +199,13 @@ const ChatUser = () => {
                                 borderRadius: "5px",
                                 border: "1px solid #ddd",
                             }}
-                            placeholder="Nhập tin nhắn..."
+                            placeholder="Aa"
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault(); // Ngăn form reload trang
+                                    sendMessage();
+                                }
+                            }}
                         />
                         <button
                             onClick={sendMessage}
@@ -194,6 +218,7 @@ const ChatUser = () => {
                                 border: "none",
                                 cursor: "pointer",
                             }}
+                            
                         >
                             ➤
                         </button>

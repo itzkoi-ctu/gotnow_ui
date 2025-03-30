@@ -17,8 +17,9 @@ import Checkout from "./components/checkout/Checkout"
 import ManageOrder from "./components/order/ManageOrder"
 import Revenue from "./components/order/Revenue"
 import OrderDetail from "./components/order/OrderDetail"
-import Chat from "./components/chat/ChatUser"
 import AdminChat from "./components/chat/AdminChatHistory"
+import OAuth2RedirectHandler from "./components/auth/OAuth2RedirectHandler"
+import ForgotPassword from "./components/auth/ForgotPassword"
 function App() {
   const router= createBrowserRouter(
     createRoutesFromElements(
@@ -33,6 +34,8 @@ function App() {
         <Route path="/checkout/:userId/checkout" element={<Checkout/>}/>
         <Route path="/unauthorized" element={<Unauthorized/>}/>
         <Route path="/order-detail/:orderId/order" element={<OrderDetail/>}/>
+        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
 
         

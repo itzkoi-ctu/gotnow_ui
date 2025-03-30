@@ -22,7 +22,6 @@ export const fetchReviews = createAsyncThunk(
     async (productId, { rejectWithValue }) => {
         try {
             const response = await api.get(`/rating/all/${productId}/rating`);
-            console.log("response from the slice:", response.data);
             
             if (!response.data || !response.data.data) {
                 return rejectWithValue("Invalid response structure");

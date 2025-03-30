@@ -6,7 +6,6 @@ export const fetchChatHistory = createAsyncThunk(
     "chat/fetchChatHistory",
     async ({ adminId, userId }) => {
         const response = await api.get(`/chat/get-chat?adminId=${adminId}&userId=${userId}`);
-        console.log("response", response);
         return response.data.data.messages; // API trả về { messages: [...] }
     }
 );
@@ -16,7 +15,6 @@ export const fetchUserChat = createAsyncThunk(
     "chat/fetchUserChat",
     async () => {
         const response = await api.get("/chat/history"); // API lấy danh sách cuộc trò chuyện
-        console.log("response", response);
         return response.data.data; // API trả về { data: [...] }
     }
 );

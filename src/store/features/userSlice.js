@@ -1,6 +1,7 @@
 import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {api} from "../../components/services/api";
 import axios from "axios";
+import { resetErrorMessage } from "./authSlice";
 
 export const getUserById = createAsyncThunk(
     "user/getUserById",
@@ -117,6 +118,9 @@ const userSlice= createSlice({
       setUserAddresses(state, action) {
         state.user.addressList = action.payload;
       }, 
+      resetErrorMessageUser(state) {
+        state.errorMessage = null;
+      }
     },
 
     extraReducers: (builder) => {
@@ -134,7 +138,7 @@ const userSlice= createSlice({
           state.loading = false;
         })
         .addCase(registerUser.rejected, (state, action) => {
-          state.errorMessage = action.error.message;
+          state.errorMessage = action.payload || "Registration failed";
           state.loading = false;
         })
         .addCase(uploadAvatar.fulfilled, (state, action) => {
@@ -145,6 +149,6 @@ const userSlice= createSlice({
 
     }
 })
-export const {setUser, setUserAddresses} = userSlice.actions
+export const {setUser, setUserAddresses, resetErrorMessageUser} = userSlice.actions
 
 export default userSlice.reducer;

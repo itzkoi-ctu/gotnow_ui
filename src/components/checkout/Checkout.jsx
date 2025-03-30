@@ -92,6 +92,7 @@ const Checkout = () => {
                 setTimeout(() => {
                     window.location.href = `/user-profile/${userId}/profile`;
                 }, 5000);
+                
             }
         } catch (error) {
             toast.error("Error processing payment: ", error.message);

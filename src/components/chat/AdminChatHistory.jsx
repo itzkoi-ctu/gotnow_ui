@@ -5,6 +5,8 @@ import { ListGroup, Container, Row, Col, Image } from "react-bootstrap";
 import ChatDetail from "./ChatDetail";
 import "./AdminChatHistory.css";
 import moment from "moment-timezone";
+import avt from "../../assets/images/defaultavatar.png"
+
 const AdminChatHistory = () => {
     const dispatch = useDispatch();
     const conversations = useSelector((state) => state.chat.conversations);
@@ -24,7 +26,7 @@ const AdminChatHistory = () => {
             <Row className="chat-container">
                 {/* Sidebar danh sách user */}
                 <Col md={4} className="chat-sidebar border-end p-3 bg-light">
-                    <h5 className="mb-3">Danh sách User đã chat</h5>
+                    <h5 className="mb-3">Chats</h5>
                     <ListGroup variant="flush">
                         {sortedConversations.map((user) => (
                             <ListGroup.Item
@@ -34,7 +36,7 @@ const AdminChatHistory = () => {
                                 style={{ cursor: "pointer" }}
                             >
                                 <Image
-                                    src={user.avatarUser}
+                                    src={user.avatarUser|| avt}
                                     roundedCircle
                                     width={40}
                                     height={40}

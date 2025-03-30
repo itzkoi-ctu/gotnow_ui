@@ -27,6 +27,13 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    loginSuccess: (state) => {
+      state.isAuthenticated = true;
+      state.token = localStorage.getItem("authToken");
+      state.roles = JSON.parse(localStorage.getItem("userRoles")) || [];
+      state.errorMessage = null;
+      state.isLoading = false;
+    },
     logout: (state) => {
       state.isAuthenticated= false
       state.token= null
@@ -34,7 +41,10 @@ const authSlice = createSlice({
       localStorage.removeItem("authToken")
       localStorage.removeItem("userRoles")
       localStorage.removeItem("userId")
-    }
+    },
+    resetErrorMessage: (state) => {
+      state.errorMessage = null;
+    },
 
 
   },
@@ -52,12 +62,12 @@ const authSlice = createSlice({
         localStorage.setItem("userId", decodedToken.id);
       })
       .addCase(login.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.errorMessage = action.payload|| "Login fail!";;
         console.log("action.payload: "+action.payload)
       });
   },
 });
-export const {logout} = authSlice.actions
+export const {logout, loginSuccess, resetErrorMessage} = authSlice.actions
 export default authSlice.reducer;
 
 

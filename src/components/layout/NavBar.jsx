@@ -49,7 +49,7 @@ const NavBar = () => {
                   Manage Orders
                 </Nav.Link>
                 <Nav.Link to="/admin-chat" as={Link} className="nav-item">
-                  Chat List
+                  Chats
                 </Nav.Link>
                 
               </>

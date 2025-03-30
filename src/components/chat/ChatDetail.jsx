@@ -106,7 +106,7 @@ const ChatDetail = ({ userId,username, onClose }) => {
                         type="text"
                         value={inputMessage}
                         onChange={(e) => setInputMessage(e.target.value)}
-                        placeholder="Nhập tin nhắn..."
+                        placeholder="Aa"
                         className="me-2"
                         onKeyPress={(e) => {
                             if (e.key === "Enter") {
@@ -116,7 +116,7 @@ const ChatDetail = ({ userId,username, onClose }) => {
                         }}
                     />
                     <Button variant="primary" onClick={sendMessage}>
-                        Gửi
+                    ➤
                     </Button>
                 </Form>
             </Card.Footer>

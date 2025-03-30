@@ -18,7 +18,7 @@ export const addToCart = createAsyncThunk(
 export const getUserCart = createAsyncThunk(
     "cart/getUserCart", async (userId) => {
         console.log("getUserCart"+userId)
-         const response = await api.get(`/carts/user/${userId}/cart`);
+         const response = await privateApi.get(`/carts/user/${userId}/cart`);
         // const response = await api.get(`/carts/user/1/cart`);
         
 
@@ -29,7 +29,7 @@ export const getUserCart = createAsyncThunk(
 export const clearCartApi = createAsyncThunk(
     "cart/clearCart", 
     async (cartId) => {
-          await api.delete(`/carts/cart/${cartId}/clear`);
+          await privateApi.delete(`/carts/cart/${cartId}/clear`);
        
         return response.data;
     }
@@ -39,7 +39,7 @@ export const clearCartApi = createAsyncThunk(
 
 export const removeItemFromCart = createAsyncThunk(
     "cart/removeItemFromCart", async ({cartId, itemId}) => {
-         const response = await api.delete(`/cartItems/cart/${cartId}/item/${itemId}/remove`);
+         const response = await privateApi.delete(`/cartItems/cart/${cartId}/item/${itemId}/remove`);
         // const response = await api.get(`/carts/user/1/cart`);
         console.log("Response from cart slice: "+ response.data)
         console.log("Response from cart slice2: "+ response.data.data)
@@ -51,7 +51,7 @@ export const removeItemFromCart = createAsyncThunk(
 export const updateQuantity = createAsyncThunk(
     "cart/updateQuantity", 
     async ({cartId, itemId, newQuantity}) => {
-          await api.put(`/cartItems/cart/${cartId}/item/${itemId}/update?quantity=${newQuantity}`);
+          await privateApi.put(`/cartItems/cart/${cartId}/item/${itemId}/update?quantity=${newQuantity}`);
        
         return {itemId, newQuantity};
     }

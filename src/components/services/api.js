@@ -17,14 +17,7 @@ export  const  privateApi= axios.create({
 
 
 
-//  const refreshToken = async () => {
-//     try {
-//       const response = await api.post("/auth/refresh-token");
-//       return response.data.accessToken;
-//     } catch (error) {
-//       return Promise.reject(error);
-//     }
-//   };
+
   const refreshToken = async () => {
     try {
         console.log("Refreshing token...");
@@ -39,6 +32,7 @@ export  const  privateApi= axios.create({
  privateApi.interceptors.request.use(
     (config) => {
       const accessToken = localStorage.getItem("authToken");
+      
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }

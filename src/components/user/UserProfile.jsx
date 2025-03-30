@@ -191,6 +191,7 @@ const UserProfile = () => {
           alt="Avatar"
           style={{ width: 150, height: 150, borderRadius: "50%", objectFit: "cover", border: "2px solid #ddd" }}
         />
+        
         <label htmlFor="avatarInput" style={{ 
           position: "absolute", bottom: 10, right: 10, 
           background: "rgba(0, 0, 0, 0.5)", padding: 8, borderRadius: "50%", cursor: "pointer"

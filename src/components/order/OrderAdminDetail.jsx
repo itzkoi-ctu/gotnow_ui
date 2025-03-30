@@ -40,13 +40,7 @@ const OrderAdminDetail = ({ orderId, show, onHide }) => {
             <p><strong>Total Amount:</strong> ${orderDetails.totalAmount}</p>
             <p><strong>Status:</strong> {orderDetails.orderStatus}</p>
             <p><strong>Delivered day:</strong> {orderDetails.deliveredDay}</p>
-            <p><strong>Address:</strong> {orderDetails.addressResponse.addressType},{" "}
-              {orderDetails.addressResponse.street}, {" "}
-               {orderDetails.addressResponse.city},{" "}
-               {orderDetails.addressResponse.state}, {" "}
-               {orderDetails.addressResponse.country}
-               </p>
-               <p><strong>Number phone:</strong> {orderDetails.addressResponse.mobileNumber}</p>
+           
 
 
 
@@ -56,7 +50,7 @@ const OrderAdminDetail = ({ orderId, show, onHide }) => {
                 <li key={item.productId} className="mb-2">
                   <strong>{item.productName}</strong> ({item.productBrand}) -
                   {item.quantity} x ${item.price}
-                  <div className="d-flex mt-2">
+                  <div className="d-flex mt-2 flex-wrap gap-2">
                     {item.images.map((img) => (
                       <ProductImage productId={img.id}/>
                     ))}

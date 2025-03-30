@@ -9,13 +9,11 @@ const ImageZoomify = ({productId}) => {
         
         useEffect(() => {
             const fetchProductImage = async (id) => {
-                console.log("Fetching image for product id: "+ id)
             try{
                 
                 const response = await fetch(
                     localHost+`/api/v1/images/image/download/${id}`
                 )
-                console.log("image"+response)
                 const blob = await response.blob()
                 const reader= new FileReader()
                 reader.onload = () => {

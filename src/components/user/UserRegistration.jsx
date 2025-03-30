@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Row, Button, Form, Col, Container } from "react-bootstrap";
-import { getCountryNames, registerUser } from "../../store/features/userSlice";
+import { getCountryNames, registerUser , resetErrorMessageUser} from "../../store/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import AddressForm from "../common/AddressForm";
 const UserRegistration = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [countries, setCountries] = useState([]);
 const errorMessage= useSelector((state) => state.user.errorMessage)
   const [user, setUser] = useState({
@@ -60,7 +61,13 @@ const errorMessage= useSelector((state) => state.user.errorMessage)
       ).unwrap();
       resetForm();
       toast.success(response.message);
+      setTimeout(() => {
+        window.location.href = `/login`;
+    }, 2500);
+
+      na
     } catch (error) {
+      console.error("Registration error:", errorMessage);
       toast.error(errorMessage);
     }
   };
@@ -71,6 +78,11 @@ const errorMessage= useSelector((state) => state.user.errorMessage)
       { country: "", state: "", city: "", street: "", addressType: "HOME" },
     ]);
   };
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage); 
+      dispatch(resetErrorMessageUser()); // Reset error message after displaying it
+    }},[errorMessage]);
 
   return (
     <Container className='d-flex justify-content-center align-items-center mt-5 mb-5'>
