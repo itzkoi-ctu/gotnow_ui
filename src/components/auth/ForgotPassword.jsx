@@ -1,31 +1,62 @@
+
 // import React, { useState, useEffect } from "react";
 // import { Form, Button, Card, Container, Row, Col, InputGroup } from "react-bootstrap";
 // import { toast, ToastContainer } from "react-toastify";
 // import { BsEnvelope, BsKey, BsShieldLock } from "react-icons/bs";
 // import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom"; // ✅ Thêm useNavigate
-// import { sendOTP, verifyOTP, resetPassword, resetState } from "../../store/features/password_temp";
+// import { useNavigate } from "react-router-dom";
+// import { sendOTP, verifyOTP, resetPassword, resetState, clearMessage } from "../../store/features/password_temp";
 
 // const ForgotPassword = () => {
 //     const [step, setStep] = useState(1); // 1: Nhập email, 2: Nhập OTP, 3: Đặt lại mật khẩu
 //     const [email, setEmail] = useState("");
 //     const [otp, setOtp] = useState("");
 //     const [newPassword, setNewPassword] = useState("");
-//     const [confirmPassword, setConfirmPassword] = useState(""); // ✅ Thêm confirm password
+//     const [confirmPassword, setConfirmPassword] = useState("");
 //     const dispatch = useDispatch();
-//     const navigate = useNavigate(); // ✅ Dùng để chuyển trang
-//     const { message, isVerified, isLoading, error, isOtpSent } = useSelector((state) => state.password);
+//     const navigate = useNavigate();
+//     const { message, isVerified, isLoading, error, isOtpSent, resetSuccess } = useSelector((state) => state.password);
 
-//     console.log("isOtpSent: " + isOtpSent); // Debug
-//     console.log("isVerified: " + isVerified); // Debug
-
+//     // Cleanup effect when component unmounts
 //     useEffect(() => {
 //         return () => {
-//             dispatch(resetState()); // Reset Redux state khi rời khỏi trang
+//             dispatch(resetState());
 //         };
 //     }, [dispatch]);
 
+//     // Handle messages and state changes
+//     useEffect(() => {
+//         if (message) {
+//             toast.success(message);
+//             dispatch(clearMessage()); // Xóa message sau khi hiển thị
+//         }
+        
+//         if (error) {
+//             toast.error(error);
+//             dispatch(clearMessage()); // Có thể thêm để đảm bảo message không bị giữ
+//         }
+        
+//         if (isOtpSent) {
+//             setStep(2);
+//         }
+        
+//         if (isVerified && step === 2) {
+//             setStep(3);
+//         }
+        
+//         if (resetSuccess) {
+//             setTimeout(() => {
+//                 navigate("/login");
+//             }, 2000);
+//         }
+//     }, [message, error, isOtpSent, isVerified, resetSuccess, navigate, dispatch, step]);
+
 //     const handleSendOTP = async () => {
+//         if (!email) {
+//             toast.error("Vui lòng nhập email");
+//             return;
+//         }
+        
 //         try {
 //             await dispatch(sendOTP(email)).unwrap();
 //         } catch (err) {
@@ -33,38 +64,41 @@
 //         }
 //     };
 
-//     const handleVerifyOTP = () => dispatch(verifyOTP({ email, otp }));
+//     const handleVerifyOTP = async () => {
+//         if (!otp) {
+//             toast.error("Vui lòng nhập mã OTP");
+//             return;
+//         }
+        
+//         try {
+//             await dispatch(verifyOTP({ email, otp })).unwrap();
+//         } catch (err) {
+//             console.error("Lỗi xác minh OTP:", err);
+//         }
+//     };
 
 //     const handleResetPassword = async () => {
+//         if (!newPassword || !confirmPassword) {
+//             toast.error("Vui lòng nhập đầy đủ thông tin");
+//             return;
+//         }
+        
 //         if (newPassword !== confirmPassword) {
-//             toast.error("Mật khẩu không khớp!"); // ✅ Kiểm tra khớp mật khẩu
+//             toast.error("Mật khẩu không khớp!");
+//             return;
+//         }
+        
+//         if (newPassword.length < 6) {
+//             toast.error("Mật khẩu phải có ít nhất 6 ký tự");
 //             return;
 //         }
 
 //         try {
 //             await dispatch(resetPassword({ email, newPassword })).unwrap();
-//             toast.success(message);
-
-//             setTimeout(() => {
-//                 navigate("/login"); // ✅ Chuyển về trang đăng nhập sau khi đặt lại mật khẩu
-//             }, 2000);
 //         } catch (err) {
 //             console.error("Lỗi đặt lại mật khẩu:", err);
 //         }
 //     };
-
-//     useEffect(() => {
-//         if (message) toast.success(message);
-//         if (error) toast.error(error);
-//         if (isOtpSent) {
-//             console.log("OTP gửi thành công, chuyển qua bước 2");
-//             setStep(2);
-//         }
-//         if (isVerified) {
-//             console.log("OTP xác minh thành công, chuyển qua bước 3");
-//             setStep(3);
-//         }
-//     }, [message, error, isOtpSent, isVerified]);
 
 //     return (
 //         <Container className="mt-5">
@@ -101,6 +135,7 @@
 
 //                             {step === 2 && (
 //                                 <>
+//                                     <p className="mb-3 text-muted">Mã OTP đã được gửi đến email: {email}</p>
 //                                     <Form.Group className="mb-3">
 //                                         <Form.Label>Mã OTP</Form.Label>
 //                                         <InputGroup>
@@ -116,6 +151,11 @@
 //                                     <Button variant="primary" className="w-100" onClick={handleVerifyOTP} disabled={isLoading}>
 //                                         {isLoading ? "Đang xác minh..." : "Xác Minh OTP"}
 //                                     </Button>
+//                                     <div className="text-center mt-2">
+//                                         <Button variant="link" onClick={handleSendOTP} disabled={isLoading}>
+//                                             Gửi lại OTP
+//                                         </Button>
+//                                     </div>
 //                                 </>
 //                             )}
 
@@ -132,6 +172,9 @@
 //                                                 onChange={(e) => setNewPassword(e.target.value)}
 //                                             />
 //                                         </InputGroup>
+//                                         <Form.Text className="text-muted">
+//                                             Mật khẩu phải có ít nhất 6 ký tự
+//                                         </Form.Text>
 //                                     </Form.Group>
 
 //                                     <Form.Group className="mb-3">
@@ -152,6 +195,20 @@
 //                                     </Button>
 //                                 </>
 //                             )}
+
+//                             {/* Nút quay lại tùy chọn */}
+//                             {step > 1 && (
+//                                 <div className="text-center mt-3">
+//                                     <Button 
+//                                         variant="outline-secondary" 
+//                                         size="sm"
+//                                         onClick={() => setStep(step - 1)}
+//                                         disabled={isLoading}
+//                                     >
+//                                         Quay lại
+//                                     </Button>
+//                                 </div>
+//                             )}
 //                         </Card.Body>
 //                     </Card>
 //                 </Col>
@@ -170,27 +227,39 @@ import { useNavigate } from "react-router-dom";
 import { sendOTP, verifyOTP, resetPassword, resetState, clearMessage } from "../../store/features/password_temp";
 
 const ForgotPassword = () => {
-    const [step, setStep] = useState(1); // 1: Nhập email, 2: Nhập OTP, 3: Đặt lại mật khẩu
+    const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [resendCountdown, setResendCountdown] = useState(0); // Thêm state đếm ngược
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { message, isVerified, isLoading, error, isOtpSent, resetSuccess } = useSelector((state) => state.password);
 
-    // Cleanup effect when component unmounts
+    // Cleanup effect khi component unmount
     useEffect(() => {
         return () => {
             dispatch(resetState());
         };
     }, [dispatch]);
 
-    // Handle messages and state changes
+    // Logic đếm ngược cho nút Resend OTP
+    useEffect(() => {
+        let timer;
+        if (resendCountdown > 0) {
+            timer = setInterval(() => {
+                setResendCountdown((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(timer); // Dọn dẹp interval khi unmount hoặc countdown thay đổi
+    }, [resendCountdown]);
+
+    // Handle messages và state changes
     useEffect(() => {
         if (message) {
             toast.success(message);
-            dispatch(clearMessage()); // Clear message after showing toast
+            dispatch(clearMessage());
         }
         
         if (error) {
@@ -199,6 +268,7 @@ const ForgotPassword = () => {
         
         if (isOtpSent) {
             setStep(2);
+            setResendCountdown(30); // Khởi động đếm ngược 30s khi OTP được gửi
         }
         
         if (isVerified && step === 2) {
@@ -222,6 +292,17 @@ const ForgotPassword = () => {
             await dispatch(sendOTP(email)).unwrap();
         } catch (err) {
             console.error("Lỗi gửi OTP:", err);
+        }
+    };
+
+    const handleResendOTP = async () => {
+        if (resendCountdown > 0) return; // Không cho gửi lại nếu đang đếm ngược
+        
+        try {
+            await dispatch(sendOTP(email)).unwrap();
+            setResendCountdown(30); // Reset đếm ngược sau khi gửi lại
+        } catch (err) {
+            console.error("Lỗi gửi lại OTP:", err);
         }
     };
 
@@ -313,8 +394,14 @@ const ForgotPassword = () => {
                                         {isLoading ? "Đang xác minh..." : "Xác Minh OTP"}
                                     </Button>
                                     <div className="text-center mt-2">
-                                        <Button variant="link" onClick={handleSendOTP} disabled={isLoading}>
-                                            Gửi lại OTP
+                                        <Button 
+                                            variant="link" 
+                                            onClick={handleResendOTP} 
+                                            disabled={isLoading || resendCountdown > 0}
+                                        >
+                                            {resendCountdown > 0 
+                                                ? `Gửi lại OTP sau ${resendCountdown}s` 
+                                                : "Gửi lại OTP"}
                                         </Button>
                                     </div>
                                 </>
@@ -357,7 +444,6 @@ const ForgotPassword = () => {
                                 </>
                             )}
 
-                            {/* Nút quay lại tùy chọn */}
                             {step > 1 && (
                                 <div className="text-center mt-3">
                                     <Button 

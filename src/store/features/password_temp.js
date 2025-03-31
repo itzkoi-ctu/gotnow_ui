@@ -200,22 +200,26 @@ const passwordSlice = createSlice({
             .addCase(verifyOTP.pending, (state) => {
                 state.isLoading = true;
                 state.message = null; // Clear message
+                state.error = null; // Clear error khi bắt đầu verify để tránh giữ lỗi cũ
             })
             .addCase(verifyOTP.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isOtpSent = false;
                 state.message = action.payload.message;
                 state.isVerified = action.payload.data;
+                state.error = null; // Xóa lỗi khi thành công
             })
             .addCase(verifyOTP.rejected, (state, action) => {
                 state.isLoading = false;
-                state.error = action.payload;
+                state.error = action.payload.message; // Chỉ gán lỗi khi reject
             })
             .addCase(resetPassword.pending, (state) => {
+                state.error = null; // Clear error message
                 state.isLoading = true;
                 state.message = null; // Clear message
             })
             .addCase(resetPassword.fulfilled, (state, action) => {
+                state.error = null; // Clear error message
                 state.isLoading = false;
                 state.isVerified = false;
                 state.isOtpSent = false;
